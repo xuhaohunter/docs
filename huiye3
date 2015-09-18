@@ -1,0 +1,142 @@
+拉代码命令：
+repo init 8916-hw;repo sync -j8;repo start local --all;source build/envsetup.sh;choosecombo 1 11 3 1;make update-api;make -j20
+repo init 8909-1136;repo sync -j8;repo start local --all;source build/envsetup.sh;
+
+
+lokit命令；
+3*7435
+
+单编出现make: *** No rule to make target错误，是没有编译环境。
+
+git branch -a
+git checkout -b
+
+bluetooth music问题，提case选择A2DP as PA3。
+
+SD卡相关问题
+BSP/HLOS	 	 
+Problem Area 2	Drivers - Peripheral	 	 
+Problem Area 3	Storage (SDCC/MMC/SDIO/SD/eMMC/UFS/SATA) - AP 
+
+adb waiting for device问题解决：
+sudo ./out/host/linux-x86/bin/adb kill-server
+sudo ./out/host/linux-x86/bin/adb logcat
+
+邮箱地址: xuhao@hymost.com 邮箱初始密码: 123456
+
+bugtracker:
+http://192.168.10.180/bugtracker/view_all_bug_page.php?page_number=1
+
+OA网址：
+http://oa.hymost.com:8888
+
+上传dump的技巧：
+ 
+
+涉及到ivim:
+1 git clone http://github.com/liyatanggithub/liyatangvim.git
+  cp .vimrc ~
+  cp -r .vim ~
+2 sudo apt-get install ctags cscope
+  vim --version | grep cscope
+  sudo apt-get autoremove vim
+3 :LP键tag
+  F5搜索
+  :KK/:LL 类似sourceinsight
+  CTRL+PageUp/PageDown 切换终端
+4 切换多个文件
+  jobs fg 
+  VS VP
+5 复制粘贴
+  中键  
+
+1 QXDM帐号
+    ZTE
+    walshcode
+    1071
+2 QXDM文档见附件，抓log前请先导入配置文件
+
+git命令：
+git branch -a
+git checkout YULOG
+git checkout -b 
+git branch -D
+git cherrypick 
+git reset HEAD^
+
+ubuntu virtualbox识别USB
+sudo adduser 你的用户名 vboxusers
+cat /etc/group | grep vboxuser
+
+\\192.168.10.175\modem_release
+titan对应的modem:X26_titan
+
+patch提交规范：
+/* 0068802 zhiyu:support SD which have no MBR sector */
+/* 0068802 zhiyu:support SD which have no MBR sector */
+
+抓空口包的方法：
+1 omnipeek软件
+2 支持抓空口包的无线网卡
+
+问题根源：p2p device name中包含特殊字符0x81，framework在解析supplicant的event时抛出了异常导致重启
+解决方案：添加try catch处理异常
+测试建议：无
+波及影响：无
+研发测试结果：通过
+
+涉及到微信的问题，需要微信版本信息及微信语音播放的时间。
+另外需要adb log、btsnoop log和附件中配置文件抓取的qxdm log。
+
+从log看手机端微信语音已播放
+08-19 08:40:08.856 I/MediaFocusControl( 2207): AudioFocus requestAudioFocus() from android.media.AudioManager@126219bccom.tencent.mm.compatible.util.b$1@228bbc9a req=2flags=0x0
+08-19 08:40:08.859 I/MediaFocusControl( 2207): AudioFocus abandonAudioFocus() from android.media.AudioManager@126219bccom.tencent.mm.compatible.util.b$1@228bbc9a
+进一步分析需要adb log、bt snoop log和qxdm log。使用bug附件中的配置文件抓取qxdm log。
+
+/dev/block/bootdevice/by-name
+
+./hardware/libhardware/include/hardware/audio.h:91:#define AUDIO_PARAMETER_KEY_BT_NREC "bt_headset_nrec"
+./packages/apps/Bluetooth/src/com/android/bluetooth/hfp/HeadsetStateMachine.java:84:    private static final String HEADSET_NREC = "bt_headset_nrec";
+
+1 setenforce 0
+2 bt_stack.conf中的BtSnoopFileName=/data/btsnoop_hci.cfa
+确认可以生成btsnoop_hci.cfa文件
+
+external/bluetooth/bluedroid/bta/ag/bta_ag_cmd.c
+HFP AT cmd
+Received AT+BAC
+bta_ag_hfp_result
+CLIP type
+cind call
+send +BCS codec is
+
+再次确认detailedDevicePattern不解析vendor_elems=1部分，是在device name中出现了特殊字符，解析时抛出了异常，转给framework处理。
+08-26 17:15:45.069  7819  7819 I wpa_supplicant: P2P-DEVICE-FOUND 66:a6:51:50:8a:d4 p2p_dev_addr=66:a6:51:50:8a:d4 pri_dev_type=10-0050F204-5 name='KIW-AL10_aff' config_methods=0x188 dev_capab=0x27 group_capab=0x0
+
+此问题开发尝试复现但没有成功，请测试复现此问题，并抓取adb log和qxdm log。使用的配置文件
+
+对比连接成功的log和连接失败的log，可以看到连接成功时有
+09-08 15:29:02.031 E/WifiAutoJoinController ( 2288): AutoJoin auto connect with netId 0 to "HY333"-WPA_PSK
+而连接失败时framework没有这个命令发下来。
+上层显示“正在连接”但supplicant没收到连接命令，无连接动作，是显示有误。
+
+android 5.0默认使用bt 4.1，bt 4.1相对于bt 4.0增加很多新特性，蓝牙相关的api也有很大变化。
+
+从log中可以看到Huawei-Employee信号强度为-83db, 是信号弱导致连不上。
+09-07 08:35:03.977 D/wpa_supplicant( 4011): wlan0: 2: 18:c5:8a:0f:f6:00 ssid='Huawei-Employee' wpa_ie_len=0 rsn_ie_len=20 caps=0x431 level=-83
+09-07 08:35:08.117 I/wpa_supplicant( 4011): wlan0: CTRL-EVENT-ASSOC-REJECT bssid=18:c5:8a:0f:f5:e0 status_code=1
+
+/* 0068802 zhiyu:support SD which have no MBR sector */
+
+从bug标题来看连接的是Huawei-Employee，看bug描述的WLAN热点，下面按照 
+从log看连接不上的原因是被AP拒绝，分析拒绝的原因需要sniffer log。
+09-08 14:09:21.279 D/wpa_supplicant(14203): wlan0: BSS: Add new id 1 BSSID ac:f7:f3:1c:6f:7d SSID 'hj040826-MI 2C'
+09-08 14:09:22.447 I/wpa_supplicant(14203): wlan0: CTRL-EVENT-ASSOC-REJECT bssid=ac:f7:f3:1c:6f:7d status_code=1
+09-08 14:09:38.846 I/wpa_supplicant(14203): wlan0: CTRL-EVENT-SSID-TEMP-DISABLED id=1 ssid="hj040826-MI 2C" auth_failures=1 duration=10 reason=CONN_FAILED
+09-08 14:09:44.786 D/wpa_supplicant(14203): wlan0: BSS: Remove id 1 BSSID ac:f7:f3:1c:6f:7d SSID 'hj040826-MI 2C' due to no match in scan
+
+
+使用期期间, 积极解决bug, 开发新feature, 工作没有出差错。
+1 
+
+
