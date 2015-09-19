@@ -1,0 +1,5 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhist_cnt =3
+let g:netrw_dirhist_1='/home/liyatang/google_source/repo/vendor/seed/longcheer/l8150/odm/proprietary/mm-camera'
+let g:netrw_dirhist_2='/home/liyatang/google_source/repo/vendor/seed/longcheer/l8150/odm/proprietary'
+let g:netrw_dirhist_3='/home/liyatang/google_source/repo/vendor/seed/longcheer/l8150/odm/proprietary/mm-camera'
