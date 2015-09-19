@@ -1,7 +1,7 @@
 拉代码命令：
 repo init 8916-hw;repo sync -j8;repo start local --all;source build/envsetup.sh;choosecombo 1 11 3 1;make update-api;make -j20
 repo init 8909-1136;repo sync -j8;repo start local --all;source build/envsetup.sh;
-
+repo init 8916-ap;repo sync -j8;repo start local --all;source build/envsetup.sh;choosecombo 1 msm8916_x39_p590l 3;make update-api;make -j20
 
 lokit命令；
 3*7435
@@ -22,6 +22,19 @@ adb waiting for device问题解决：
 sudo ./out/host/linux-x86/bin/adb kill-server
 sudo ./out/host/linux-x86/bin/adb logcat
 
+解决selinux denied问题：
+1 adb shell cat /proc/kmsg
+2 cat denied_log.txt | audit2allow
+3 device/qcom/sepolicy/common添加对应的te
+
+wifi/bt tester暗码：
+*#*#8375#*#*
+选择“Wifi and BT"-- "Wifi"
+
+coolpad 测试暗码：
+#*20110606#
+*#96463#*
+
 邮箱地址: xuhao@hymost.com 邮箱初始密码: 123456
 
 bugtracker:
@@ -31,7 +44,6 @@ OA网址：
 http://oa.hymost.com:8888
 
 上传dump的技巧：
- 
 
 涉及到ivim:
 1 git clone http://github.com/liyatanggithub/liyatangvim.git
@@ -64,39 +76,50 @@ git branch -D
 git cherrypick 
 git reset HEAD^
 
+git add
+git commit -am "123"
+git format-patch -p1
+git diff > 123.patch
+cp 0001-comment-Wifi-Direct-MUT-crash-after-disconnect-wifi-.patch frameworks/opt/net/wifi
+patch -p1 < 123.patch或者git apply 123.patch
+
 ubuntu virtualbox识别USB
 sudo adduser 你的用户名 vboxusers
 cat /etc/group | grep vboxuser
+将xuhao加入sudo目录：
+sudo groupadd usbfs
+sudo adduser kuein vboxusers
+sudo adduser kuein usbfs
+
 
 \\192.168.10.175\modem_release
 titan对应的modem:X26_titan
 
+ubuntu返回经典主题：
+sudo apt-get install gnome-session-fallback
+sudo apt-get install gnome-panel
+
+git hub:
+git clone https://github.com/xuhaohunter/docs.git
+git commit -am "辉烨技术文档"
+git push/git push origin master
+
 patch提交规范：
+//0067864 xuhao:fix connect bmw carkit qq no sound
 /* 0068802 zhiyu:support SD which have no MBR sector */
-/* 0068802 zhiyu:support SD which have no MBR sector */
+0067864: fix connect bmw carkit qq no sound
 
 抓空口包的方法：
 1 omnipeek软件
 2 支持抓空口包的无线网卡
 
-问题根源：p2p device name中包含特殊字符0x81，framework在解析supplicant的event时抛出了异常导致重启
-解决方案：添加try catch处理异常
+问题根源：播放器向宝马车载蓝牙更新暂停状态时，宝马车载会停止发声
+解决方案：A2DP停止时播放器才发送暂停状态
 测试建议：无
 波及影响：无
 研发测试结果：通过
 
-涉及到微信的问题，需要微信版本信息及微信语音播放的时间。
-另外需要adb log、btsnoop log和附件中配置文件抓取的qxdm log。
-
-从log看手机端微信语音已播放
-08-19 08:40:08.856 I/MediaFocusControl( 2207): AudioFocus requestAudioFocus() from android.media.AudioManager@126219bccom.tencent.mm.compatible.util.b$1@228bbc9a req=2flags=0x0
-08-19 08:40:08.859 I/MediaFocusControl( 2207): AudioFocus abandonAudioFocus() from android.media.AudioManager@126219bccom.tencent.mm.compatible.util.b$1@228bbc9a
-进一步分析需要adb log、bt snoop log和qxdm log。使用bug附件中的配置文件抓取qxdm log。
-
 /dev/block/bootdevice/by-name
-
-./hardware/libhardware/include/hardware/audio.h:91:#define AUDIO_PARAMETER_KEY_BT_NREC "bt_headset_nrec"
-./packages/apps/Bluetooth/src/com/android/bluetooth/hfp/HeadsetStateMachine.java:84:    private static final String HEADSET_NREC = "bt_headset_nrec";
 
 1 setenforce 0
 2 bt_stack.conf中的BtSnoopFileName=/data/btsnoop_hci.cfa
@@ -110,33 +133,53 @@ CLIP type
 cind call
 send +BCS codec is
 
-再次确认detailedDevicePattern不解析vendor_elems=1部分，是在device name中出现了特殊字符，解析时抛出了异常，转给framework处理。
-08-26 17:15:45.069  7819  7819 I wpa_supplicant: P2P-DEVICE-FOUND 66:a6:51:50:8a:d4 p2p_dev_addr=66:a6:51:50:8a:d4 pri_dev_type=10-0050F204-5 name='KIW-AL10_aff' config_methods=0x188 dev_capab=0x27 group_capab=0x0
+bluetooth log关键词总结：
+有文件传入
+09-18 14:45:36.381 D/BtOppObexServer( 7655): Create ServerSession with transport com.android.bluetooth.opp.BluetoothOppTransport@15ae0f02
+向其他手机传文件
+09-18 14:49:01.764 D/BtOppObexClient( 7655): Create ClientSession with transport com.android.bluetooth.opp.BluetoothOppTransport@22d0e720
 
-此问题开发尝试复现但没有成功，请测试复现此问题，并抓取adb log和qxdm log。使用的配置文件
+08-26 15:37:18: E/BtOppObexClient( 6454): java.io.IOException: bt socket closed, read return: -1
+about the first issue,when you DO OPP RXTX, A2DP stream is playing, So it will fail.
 
-对比连接成功的log和连接失败的log，可以看到连接成功时有
-09-08 15:29:02.031 E/WifiAutoJoinController ( 2288): AutoJoin auto connect with netId 0 to "HY333"-WPA_PSK
-而连接失败时framework没有这个命令发下来。
-上层显示“正在连接”但supplicant没收到连接命令，无连接动作，是显示有误。
+音量调节对应的adb log:
+09-18 10:18:04.529 D/bt-btif ( 7274): HFP AT cmd:2 arg_type:2 arg:0 arg:0
+09-18 10:18:10.530 D/bt-btif ( 7274): HFP AT cmd:2 arg_type:2 arg:7 arg:7
+09-18 10:18:14.191 D/bt-btif ( 7274): HFP AT cmd:2 arg_type:2 arg:15 arg:15
 
-android 5.0默认使用bt 4.1，bt 4.1相对于bt 4.0增加很多新特性，蓝牙相关的api也有很大变化。
+Hands-Free:
+	Role: Slave
+	Address: 2
+	Command: Enable Custom AT Commands
+	Device: y
+	Numeric Value: 0
 
-从log中可以看到Huawei-Employee信号强度为-83db, 是信号弱导致连不上。
-09-07 08:35:03.977 D/wpa_supplicant( 4011): wlan0: 2: 18:c5:8a:0f:f6:00 ssid='Huawei-Employee' wpa_ie_len=0 rsn_ie_len=20 caps=0x431 level=-83
-09-07 08:35:08.117 I/wpa_supplicant( 4011): wlan0: CTRL-EVENT-ASSOC-REJECT bssid=18:c5:8a:0f:f5:e0 status_code=1
+Hands-Free:
+	Role: Slave
+	Address: 3
+	Command: Enable Custom AT Commands
+	Device:
+	Numeric Value: f
 
-/* 0068802 zhiyu:support SD which have no MBR sector */
+Hands-Free:
+	Role: Slave
+	Address: 2
+	Command: Enable Custom AT Commands
+	Device: D
+	Numeric Value: 87
 
-从bug标题来看连接的是Huawei-Employee，看bug描述的WLAN热点，下面按照 
-从log看连接不上的原因是被AP拒绝，分析拒绝的原因需要sniffer log。
-09-08 14:09:21.279 D/wpa_supplicant(14203): wlan0: BSS: Add new id 1 BSSID ac:f7:f3:1c:6f:7d SSID 'hj040826-MI 2C'
-09-08 14:09:22.447 I/wpa_supplicant(14203): wlan0: CTRL-EVENT-ASSOC-REJECT bssid=ac:f7:f3:1c:6f:7d status_code=1
-09-08 14:09:38.846 I/wpa_supplicant(14203): wlan0: CTRL-EVENT-SSID-TEMP-DISABLED id=1 ssid="hj040826-MI 2C" auth_failures=1 duration=10 reason=CONN_FAILED
-09-08 14:09:44.786 D/wpa_supplicant(14203): wlan0: BSS: Remove id 1 BSSID ac:f7:f3:1c:6f:7d SSID 'hj040826-MI 2C' due to no match in scan
+在屏蔽室测试4X和tiantan手机吞吐量数据如下：
+11n
+   上行 4X  42.6    titan  45.3
+   下行 4x  41.8    titan  45.4
+11g
+   上行 4X  22.0    titan  22.7
+   下行 4x  23.5    titan  26.1
+11g
+   上行 4X  5.52    titan  5.78
+   下行 4x  5.79    titan  6.22
+titan手机吞吐量稍高与对比机华为4X手机。微信视频卡顿应该是上层引起的
+。
 
-
-使用期期间, 积极解决bug, 开发新feature, 工作没有出差错。
-1 
 
 
