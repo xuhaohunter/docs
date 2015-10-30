@@ -2,6 +2,9 @@
 repo init 8916-hw;repo sync -j8;repo start local --all;source build/envsetup.sh;choosecombo 1 11 3 1;make update-api;make -j20
 repo init 8909-1136;repo sync -j8;repo start local --all;source build/envsetup.sh;
 repo init 8916-ap;repo sync -j8;repo start local --all;source build/envsetup.sh;choosecombo 1 msm8916_x39_p590l 3;make update-api;make -j20
+repo init 8x09-app;repo sync -j8;repo start local --all;source build/envsetup.sh;choosecombo 1 15 3;make update-api;make -j20
+repo init 8952-ap;repo sync -j8;repo start local --all;source build/envsetup.sh;choosecombo 1 msm8952_x40_p668l 13;make update-api;make -j20
+WCN3615
 
 lokit命令；
 3*7435
@@ -31,6 +34,9 @@ wifi/bt tester暗码：
 *#*#8375#*#*
 选择“Wifi and BT"-- "Wifi"
 
+bt版本：
+Bluetooth Core Specification
+
 coolpad 测试暗码：
 #*20110606#
 *#96463#*
@@ -42,8 +48,6 @@ http://192.168.10.180/bugtracker/view_all_bug_page.php?page_number=1
 
 OA网址：
 http://oa.hymost.com:8888
-
-上传dump的技巧：
 
 涉及到ivim:
 1 git clone http://github.com/liyatanggithub/liyatangvim.git
@@ -60,7 +64,17 @@ http://oa.hymost.com:8888
   jobs fg 
   VS VP
 5 复制粘贴
-  中键  
+  中键
+
+AndroidBoard.mk
+KERNEL_DEFCONFIG := msm8916_titan-perf_defconfig
+
+9.19vim快捷键：
+;ll  右边显示代码结构
+;kk  左边显示目录结构
+;lp  vim下打tag，F5搜索
+insert模式下 alt + hjkl来上下左右使用
+
 
 1 QXDM帐号
     ZTE
@@ -83,6 +97,10 @@ git diff > 123.patch
 cp 0001-comment-Wifi-Direct-MUT-crash-after-disconnect-wifi-.patch frameworks/opt/net/wifi
 patch -p1 < 123.patch或者git apply 123.patch
 
+cd .repo/projects/external/bluetooth/
+rm bluedroid.git/ -rf
+repo start local external/bluetooth/bluedroid/
+
 ubuntu virtualbox识别USB
 sudo adduser 你的用户名 vboxusers
 cat /etc/group | grep vboxuser
@@ -91,30 +109,46 @@ sudo groupadd usbfs
 sudo adduser kuein vboxusers
 sudo adduser kuein usbfs
 
-
+上传dump的技巧：
+dump问题需要elf文件见modem_release，vmlinux见刷机软件。
 \\192.168.10.175\modem_release
 titan对应的modem:X26_titan
+
+空指针crash的信号为SIGSEGV, 区别于SIGPIPE
+
+1 elf文件放在dump下
+2 dump文件放在usbdump/coredump下面
+3 vmlinux放在usbdump下面
+4 parser8916, dump_log.bat
 
 ubuntu返回经典主题：
 sudo apt-get install gnome-session-fallback
 sudo apt-get install gnome-panel
+
+excel使用技巧：
+1 点框格式刷
+
 
 git hub:
 git clone https://github.com/xuhaohunter/docs.git
 git commit -am "辉烨技术文档"
 git push/git push origin master
 
+git clone https://github.com/liyatanggithub/liyatangvim.git
+替换.vimrc和.vim文件夹
+
 patch提交规范：
 //0067864 xuhao:fix connect bmw carkit qq no sound
 /* 0068802 zhiyu:support SD which have no MBR sector */
 0067864: fix connect bmw carkit qq no sound
+//0072328 xuhao:optimize wifi log
 
 抓空口包的方法：
 1 omnipeek软件
 2 支持抓空口包的无线网卡
 
-问题根源：播放器向宝马车载蓝牙更新暂停状态时，宝马车载会停止发声
-解决方案：A2DP停止时播放器才发送暂停状态
+问题根源：重复打印无用log，影响系统性能
+解决方案：删除无用log
 测试建议：无
 波及影响：无
 研发测试结果：通过
@@ -133,6 +167,18 @@ CLIP type
 cind call
 send +BCS codec is
 
+build id:
+build ID：M8939AAAAANLYD2142.1
+
+虚拟机增加硬盘：
+1 Settings -> Storage -> Add Hard Disk
+2 管理 -> 磁盘管理 -> 选盘符
+
+bluedroid使用ALOGE:
+添加2个头文件
+#include "bt_utils.h"
+#include <log/log.h>
+
 bluetooth log关键词总结：
 有文件传入
 09-18 14:45:36.381 D/BtOppObexServer( 7655): Create ServerSession with transport com.android.bluetooth.opp.BluetoothOppTransport@15ae0f02
@@ -142,10 +188,18 @@ bluetooth log关键词总结：
 08-26 15:37:18: E/BtOppObexClient( 6454): java.io.IOException: bt socket closed, read return: -1
 about the first issue,when you DO OPP RXTX, A2DP stream is playing, So it will fail.
 
+wifi/bt时间片分配策略：
+MSG   [04513/02] WLAN Reserved 7/High    00:17:04.849    riva_cxm_interval.c  04895  [W :CXM:26054] CxM_Interval_resolveStaticLongParams() wlan (30000) bt (120000)
+MSG   [04513/02] WLAN Reserved 7/High    00:17:27.425    riva_cxm_interval.c  04895  [W :CXM:29916] CxM_Interval_resolveStaticLongParams() wlan (60000) bt (90000)
+MSG   [04513/02] WLAN Reserved 7/High    00:17:25.751    riva_cxm_interval.c  04895  [W :CXM:29329] CxM_Interval_resolveStaticLongParams() wlan (50000) bt (40000)
+
 音量调节对应的adb log:
 09-18 10:18:04.529 D/bt-btif ( 7274): HFP AT cmd:2 arg_type:2 arg:0 arg:0
 09-18 10:18:10.530 D/bt-btif ( 7274): HFP AT cmd:2 arg_type:2 arg:7 arg:7
 09-18 10:18:14.191 D/bt-btif ( 7274): HFP AT cmd:2 arg_type:2 arg:15 arg:15
+
+从supplicant wlan0初始化过程可以看到本机MAC地址：
+wlan0: Own MAC address: c8:51:95:28:0d:54
 
 Hands-Free:
 	Role: Slave
@@ -168,18 +222,103 @@ Hands-Free:
 	Device: D
 	Numeric Value: 87
 
-在屏蔽室测试4X和tiantan手机吞吐量数据如下：
-11n
-   上行 4X  42.6    titan  45.3
-   下行 4x  41.8    titan  45.4
-11g
-   上行 4X  22.0    titan  22.7
-   下行 4x  23.5    titan  26.1
-11g
-   上行 4X  5.52    titan  5.78
-   下行 4x  5.79    titan  6.22
-titan手机吞吐量稍高与对比机华为4X手机。微信视频卡顿应该是上层引起的
-。
+10月份关掉的bug:
+[Titan系统版本 0070281]: 【DTS2015090800164】【TIT-CL00C92B065_蓝牙拉锯测试_必现】【性能】【HW】蓝牙拉锯传输文件测试时，Wifi浏览网页和下载文件都会导致传输时间超标
+0070222: APR_B061c_tombstone\#01 pc 00001a27 /system/lib/hw/audio.a2dp.default.so\/system/bin/mediaserver
+0068304: 【DTS2015081900252】【TIT-CL00 C92B056_蓝牙兼容性实验室_必现】【HW】与耳机配对连接，通话过程中，耳机端无法关闭静音
+
+802.11d是一个无线网络通信规范，主要是用在不允许使用802.11家族其他标准的国家中。　　802.11d规范在大多数方面中和802.11b是很相似的。它区别于802.11b的地方主要是在媒体访问控制层（MAC层）其配置可以变化，以使其遵守应用该网络的国家或地区的规则，这些规则也是受一些因素变化的，变化主要包括频率、信号带宽等。有了这个规范，就没有必要再对用于不同环境中的不同硬件进行设计和生产了。因此802.11d规范适合于想要提供全球漫游服务的系统。
+
+11d功能一般客户都不需要，现在很多AP设置国家码都没按地区设置，所以11d获取的国家码不可信。建议关闭11d在您的正式出货版本里。
+
+错误的国家码导致CH12，CH13扫描不到，禁用802.11d解决问题。
+
+关于FM的几个问题软件都已经分析过了，才转给硬件的。
+我们这边认为以硬件为主导，搜台少需要降低信噪比，差台多需要提升信噪比，硬件应该提供合适的信噪比。
+
+在4.3中，sdcard_rw组有全部的读写权限，在Kitkat中，sdcard_r 组有 +rwx 所有权限，实际上这是明显不对的。并不等表示全部，因为Fuse守护进程会在运行时中积极地参与修改应用的权限。这对File APIs canWrite(),canRead()和canExecute()的执行结果有很大的影响，这些方法返回的值被单独地记录在内核文件系统中，所以他们都会返回true，即使试图以POSIX打开文件也会失败。（在4.4的外置sd卡上，是不能在文件夹写入一下文件的，但是当你试图调用canWrite()方法来判断该文件夹是否可写时，它仍会返回true值，所以此法不可取）
+
+  android.permission.WRITE_EXTERNAL_STORAGE权限被授给sdcard_r组和sdcard_rw组的成员，但在kitkat中认证write权限需要一些动态的检查，因此FUSE守护进程会被用来补充文件系统的权限，FUSE守护进程会强制赋予拥有特定目录的App每个权限（也就是访问自身数据存储的目录android/data/pack-agename...及一些公共目录)。对于sdcard_rw组中使用-w标志配置的非默认所有者，FUSE守护进程也会强制赋予write-protected权限。
+
+  http://www.2cto.com/kf/201405/303835.html
+
+从测试报告来看T2-2 FM性能挺好的，bug是华为在9月1号版本T1机器上测试的结果，建议由测试在最新版本上重新测试下。
+后续看是否需要修改信噪比。
+
+root@HWTIT-L8916:/ # ll storage/sdcard1
+drwxrwx--x root     sdcard_r          2015-01-01 14:27 Android
+drwxrwx--- root     sdcard_r          2015-09-28 20:18 LOST.DIR
+drwxrwx--- root     sdcard_r          2015-09-14 16:19 System Volume Information
+
+device/qcom/common/rootdir/etc/init.qcom.rc
+mkdir /mnt/media_rw/sdcard1 0700 media_rw media_rw
+
+service fuse_sdcard1 /system/bin/sdcard -u 1023 -g 1023 -w 1023 -d /mnt/media_rw/sdcard1 /storage/sdcard1
+    class late_start
+    disabled
+service fuse_sdcard1 /system/bin/sdcard -u 1023 -g 1023 -w 1023 -d /mnt/media_rw/sdcard1 /storage/sdcard1
+    class late_start
+    disabled
+
+09-14 21:30:52.245  2276  3638 I netstats_mobile_sample: [38725,199,155244,281,38725,199,151774,281,38725,199,151774,281,1442237454906]
+09-14 21:30:52.245  2276  3638 I netstats_wifi_sample: [1774495,7453,10910883,10683,1768604,7260,10759790,10641,1765048,7225,10759790,10641,1442237454906]
+09-14 21:33:42.059  2276  4411 I netstats_mobile_sample: [38821,201,155368,283,38821,201,151991,285,38821,201,151991,285,1442237625489]
+09-14 21:33:42.062  2276  4411 I netstats_wifi_sample: [1774495,7453,10910883,10683,1768604,7260,10759790,10641,1765048,7225,10759790,10641,1442237625489]
+netstats_mobile_sample/netstats_wifi_sample定义在在franework下的EventLogTags.logtags，使用在NetworkStatsService.java中，请分析下为什么会反复打印这2条log?
+
+这个设置信噪比的接口有问题，需要跟路可可一起检查下相关逻辑，看看为什么设置了没生效？
+相关问题我已经跟他解释了。
+
+0065592: 【titan-TIT-CL00C92B051-必现】FM搜台时间长且搜台数少（对比移动版P8）                                      ---->降低信噪比
+0065608: 【titan-TIT-CL00C92B051-必现】地下室弱信号环境FM搜台，测试机搜不到台。                                     ---->降低信噪比
+0070457: 【DTS2015091008618】【TIT-CL00C92B065_FM_必须】【性能测试】【HW】测试机FM平均每次搜到的差台数超出对比机P8 2个以上   ---->提高信噪比
+这虽然是软测的报的问题，但软件分析后是硬件问题。
+FM搜不到的问题需要硬件改善性能，降低信噪比只是work around的方法。
+
+  控制帧 Type=01
+  Subtype
+  1010    Power Save-Poll
+  1011    RTS
+  1100    CTS
+  1101    ACK
+  1110    CF-End
+  1111    CF-End +CF-Ack
+
+从tombstone来看crash在netstat进程中，相关代码为NetworkStatsService.java。
+pid: 7946, tid: 7946, name: netstat  >>> netstat <<<
+
+case:02193710
+
+当发射端希望发送数据时，首先检测介质是否空闲，若是介质为空闲时，送出RTS（Request To Send请求发送），RTS信号包括发射端的地址、接收端的地址、下一笔数据将持续发送的时间等信息，接收端收到RTS信号后，将响应短信号CTS（Clear To Send），CTS信号上也RTS内记录的持续发送的时间，当发射端收到CTS包后，随即开始发送数据包。接收端收到数据包后，将以包内的CRC（CyClic Redundancy Check，循环冗余校验）的数值来检验包数据是否正确，若是检验结果正确时，接收端将响应ACK包，告知发射端数据己经被成功地接收。当发射端没有收到接收端的ACK包时，将认为包在传输过程中丢失，而一直重新发送包。
+
+csmd/ca冲突避免机制：
+1 信道空闲评估算法 DIFS
+2 RTS/CTS
+
+（1）首先运用信道空闲算法CCA(天线能量/载波)检测信道是否空闲，若空闲则等待DIFS（SIFS+2*slot time）帧间隔后送出数据
+（2）接受端收到数据后，使用包内的CRC（循环冗余校验）来检验数据是否正确，经过SIFS帧间隔后发送ACK
+（3）发送端接受到ACK后，信道空闲，各发送端进入竞争时间窗口
+
+
+目前初步分析bluedroid中没有收到底层传上来的connect request, 导致没有弹出配对对话框，已在代码中添加log，需要重新抓取log，进一步定位问题。需要以下log
+1 修改手机中的/etc/bluetooth/bt_stack.conf文件
+    TRC_xxx = 5；
+    BtSnoopLogOutput=true，BtSnoopFileName=/sdcard/btsnoop_hci.cfa
+2 adb logcat -v time，不用使用其他参数
+3 btsnoop log
+另外前面对比机是海思平台的，需要提供下高通平台的对比机log。
+截图不能反映遮挡的情况，最好提供视频，或者多截几张图。
+
+问题根源：mtp显示的userdata分区的大小，不是总容量，和titan项目保持一致，后续增大userdata分区的大小
+解决方案：增大userdata分区大小
+测试建议：无
+波及影响：无
+研发测试结果：pass
+
+//0068239 xuhao:disable BLE privacy features to fix Casio watch dono't show bt pairing dialog
+
+8G SD卡显示7.4G是正常的。
+内部存储电脑上显示12.3G是用户容量，手机上显示16G是总容量，和其他项目保持一致，也是正确的。
 
 
 
