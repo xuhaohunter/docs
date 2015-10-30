@@ -1,0 +1,494 @@
+android4.2中和printer相关的类：
+1 android.util.Printer
+2 android.util.LogPrinter
+3 android.util.PrintStreamPrinter
+4 android.util.PrintWriterPrinter
+5 android.util.StringBufferPrinter
+
+在eos3gkk工程中找到的和printer相关的代码：
+搜索grep -rs startPrinterDiscovery ./
+1 /frameworks/base/services/java/com/android/server/print/PrintManager.java, UserState.java, RemotePrintService.java
+---->IPrintService.aidl
+2 /frameworks/base/core/java/android/printservice/PrinterDiscoverySession.java, PrintService.java
+  其中PrintService.java-->PrinterDiscoverySession.java-->abstract onStartPrinterDiscovery(.)
+  /frameworks/base/core/java/android/print/PrinterDiscoverySession.java
+  PrinterDiscoverySession.java-->IPrintManager.aidl
+
+
+谷歌CloudPrint.apk
+CloudPrint.apk-->CloudPrint_dex2jar.jar
+
+
+编译完整命令：
+1 build/envsetup.sh
+2 jrdmmm .....
+3 adb push
+
+提交代码完整流程：
+1 repo sync packages/apps/Settings
+2 jrdmmm packages/apps/Settings
+3 搜索editor在texteditor里面
+4 git diff/git status /git add
+5 bugzilla Mark bug as OPENED, changing resolution to Accepted
+6 delivery-gui product mtk6595-kk-v1.0-dint
+7 git HEAD第一个和第三个
+8 code review时选2 review approved, patch set1
+9 review别人, 2 looks good to me.
+回退git reset HEAD^
+
+python ~/patch_delivery_cli.py -p idol347
+以点结束，删除./repo下的delivery_gui
+git push ssh://adison.xu@172.16.11.162:29418/quicl/vendor/tctalone/TctAppPackage HEAD:refs/for/l8936
+
+编译android命令：
+source build/envsetup.sh;choosecombo 1 idol347 3 2 2
+(一定要先敲前面2条命令)make/mm/make framework -j4
+
+git add .
+repo start work --all
+git commit([Wifi][Root Cause][Solution])
+git push ssh://adison.xu@172.24.61.94:29418/quicl/<git name>.git HEAD:refs/for/l8916_sh_bsp_dev2
+
+patch -p1 <~/Downloads/patches/0001-WAPI-supplicant-patch-on-Google-L-pre-release.patch
+打patch的时候注意有没有reject生成，有reject生成就是
+
+git diff
+history
+git log
+如何将修改生成git:
+git add
+git commit -am "123"
+git format-patch -p1
+git diff > 123.patch
+cp 0001-comment-Wifi-Direct-MUT-crash-after-disconnect-wifi-.patch frameworks/opt/net/wifi
+patch -p1 < 123.patch或者git apply 123.patch
+
+Jenkins帐号密码：
+jenkins.sh
+sh20141209
+
+NJ SH公共盘：
+172.26.5.103
+
+如何判断项目：
+String productName = SystemProperties.get("ro.build.product");
+if ((productName != null) && !productName.equals("idol347")) {
+    productName = SystemProperties.get("ro.product.device");
+}
+if ((productName != null) && productName.equals("idol347")) {
+    mProductIdol347 = true;
+}
+
+message2网站：
+http://172.24.61.28/msgm/index.php?r=index/index
+
+alto5去除写保护：
+power键+音量上键
+
+isdm_Settings.plf-->isdm_Settings.splf
+
+//PR830367 ADISON.XU ADD BEGIN
+//PR830367 ADISON.XU ADD END
+//[PATCH] WAPI Adison.Xu Add
+//[BUGFIX]-MOD-BEGIN by wangjie, 2014.11.28,disable android L autojoin policy, PR837635
+//[BUGFIX]-ADD-BEGIN by Adison.Xu
+.mk
+复制bug解决办法：
+
+adb shell
+mount -o remount rw /custpack/
+
+push wifi firmware:
+adb shell mount -o rw,remount /firmware
+adb push wcnss* /firmware/image
+adb push wcnss.b00 /firmware/image
+adb push wcnss.b01 /firmware/image
+adb push wcnss.b02 /firmware/image
+adb push wcnss.b04 /firmware/image
+adb push wcnss.b06 /firmware/image
+adb push wcnss.b09 /firmware/image
+adb push wcnss.b10 /firmware/image
+adb push wcnss.b11 /firmware/image
+adb push wcnss.mdt /firmware/image
+adb push wcnss.flist /firmware/image
+adb reboot
+
+find ./amss_8x36/ -name "wcnss.mdt"
+
+adb shell cat /proc/kmsg > kmsg.log
+
+gedit build-log.txt  &
+gedit wcnss_build.cmd &
+gedit wcnss_build.sh &
+vim kmsg.log &
+
+user版本root:
+adb shell setprop persist.tctphone.root 1
+adb shell setenforce 0
+
+抓取WifiLogger:
+WifiLogger_app -o 1 
+
+增加log的命令：
+iwpriv wlan0 setwlandbg 5 9 1
+iwpriv wlan0 setwlandbg 6 9 1
+iwpriv wlan0 setwlandbg 7 9 1
+
+user to eng:
+*#*#212018#*#*
+
+开启tct feedback的命令：
+*#*#0574#*#*
+tint8开启log
+2*2-2+=
+
+开启MtkLog的命令：
+*#*#825333284#*#*
+平板对应的命令：
+0825333284
+user版root:
+*#*#212018#*#*
+
+看版本号：
+*#3228#
+从第2位开始连续4位，间隔2位再取1位。
+
+共享地址：
+172.24.218.119
+虚拟机登录共享：
+1 运行\\172.24.218.119
+2 用户名ta-cn\adison.xu 密码1qaz@wsx3E
+
+ 第一步:点击VMware菜单“虚拟→设置”，在配置窗口的“选项”标签页内点击“共享文件夹”，在右侧点击“添加”按钮添加要共享的文件夹。
+
+第二步:以虚拟Windows XP为例，启动虚拟机，右击“我的电脑”选择“映射网络驱动器”命令，点击“浏览”按钮，在“整个网络”下选中“VMware Shared Folders”下的相应目录，即可在虚拟机中把共享的文件夹映射为驱动器。 
+
+安装omnipeek软件：
+需要注意的地方
+ 名字和公司选择130，130
+ 获取认证key的时候选取版本7.5 
+
+抓sniffer log的步骤(以wfd为例)：
+1 开启mtklog，搜关键字“V101”，得到dongle MAC地址
+2 任务管理器安装驱动
+3 omnipeek确认选在无线网卡，且在yes
+4 全信道scan，wfd新建2个fiter，以时间命名
+5 保存niffer log
+抓取tcpdump的步骤：
+tcpdump -i wlan0 -s 0 -w /data/tcpdump.pcap
+tcpdump -i any -p -s 0 -w storage//sdcard0/capture.pcap
+抓取rtp dump:
+system/etc/wfdconfig.xml中的<RTPDumpEnable><Valid>1</Valid>
+生成在data/media目录下。
+
+NX及SMB下载地址：
+172.24.116.3
+
+出现开发人员工具：
+点三下Build number/Kernel version
+
+Readme登录：
+http://172.24.219.57:83/redmine
+
+KOA帐号：
+http://koa.tclmobile.cn/lks/koa/lks_workplace.nsf?open  X_131970
+
+拉代码Key位置：
+/home/adison.xu/.ssh/id_rsa
+
+black版本：
+file:///automount/doc/swd/Projects/Android/1-Application_Software_Section/6-%20Public/OneTouchHandbook/index.htm
+
+高通网站:https://downloads.cdmatech.com
+帐号密码：adison.xu@tcl.com  Xh131970
+nv参数网站
+账户：adison.xu@tcl.com
+密码：734455
+others:history
+
+高通 Huizhong Wang电话：
+13810400295
+010-57760390
+huizhong@qti.qualcomm.com
+高通 Chen Jiwen电话：
+021-20373611
+18616828393
+
+高通编译网站：
+http://172.24.220.144/wiki/index.php/Alto5
+高通单编方法：
+1 source build/envsetup.sh;choosecombo 1 idol347 3 2 2
+2 进入当前目录mmm -i ./或者直接make Settings -j8/make framework -j8
+-i是忽略错误，-b重新编译
+make bootimage -j8
+alto5_global有写保护
+
+抓取8939log:
+WifiLogger_app -o 1
+
+编译wlan.ko
+make pronto_wlan.ko -j6
+http://172.24.218.195/s/Idol3-4.7/appli/vA8Z/vA8Z_vmlinux.zip/out/target/product/idol347/obj/vendor/qcom/opensource/wlan/prima/
+
+强制刷机：
+1 断开USB
+2 接电源
+3 按电源键
+4 短接2小点，就可以了。
+
+高通项目刷perso方法：
+1 选择主版本
+2 双击custpack/system选择perso, 注意选择的文件,SEC勾上
+
+查看kernel logs:
+1 adb shell cat /proc/kmsg
+
+字符串对应的文件：
+jb_wimdata_ng/wlanguage/src/strings.xls
+
+查看log的常用命令：
+grep -irns "Control interface command 'SET_NETWORK\|Control interface command 'SAVE_CONFIG'\|Control interface command 'DISCONNECT'\|wlan0: State" ./log
+grep -wirnsh "CTRL-EVENT-SCAN-STARTED" ./
+grep -ihEr "RTSP" ./
+
+reset;grep -iEh "noise=0 level=|CTRL-EVENT-DISCONNECT|Trying to ass|CTRL-EVENT-CONNECT|setWifiEnable" ./
+reset;grep -iEh "CTRL-EVENT-DISCONNECT|Trying to ass|CTRL-EVENT-CONNECT|setWifiEnabled|shouldSwitchNetwork|wpa_supplicant|WifiStateMachine|dhcpd" ./Vv1A67-0_20150313_204336_+0800_logcat-vtime-bmain-bradio-bsystem-bcrash.txt  >1.txt
+frep -irEh "#wpa-cmd: IFNAME=wlan0 SET_NETWORK|#wpa-cmd: IFNAME=wlan0 ENABLE_NETWORK|#wpa-cmd: IFNAME=wlan0 ADD_NETWORK|#wpa-cmd: IFNAME=wlan0 RECONNECT|#wpa-cmd: IFNAME=wlan0 SELECT_NETWORK|wlan0: CTRL-EVENT-DISCONNECTED|wlan0: CTRL-EVENT-CONNECTED" ./
+
+
+adb logcat > wifi.log
+gedit wifi.log &
+grep -irn 'WifiStateMachine' ./wifi.log
+grep -irn 'wpa_supplicant' ./wifi.log
+grep -irn 'setWifiEnabled' ./wifi.log
+
+grep -isrn 'WifiStateMachine' ./ | grep -isrn 'WAPIPSK'
+grep -isrn '06:0b:c0:03:46:a7' ./
+gedit ./main_log +7344 &
+
+grep -irns "M1\|M2\|M3\|M4\|M5\|M6\|M7\|M8" ./
+
+使用fastboot工具
+which fastboot
+fastboot devices
+adb reboot bootloader
+fastboot devices
+sudo fastboot devices -i 0x1bbb
+ls
+make bootimage -j8
+sudo fastboot flash system system.img -i 0x1bbb
+sudo fastboot flash boot boot.img
+fastboot flash hdcp hdcp.img
+
+wifi transfer独立apk地址:
+vendor/tctalone/TctAppPackage/WifiTransfer
+makeperso/Makeperso.sh 作用机制 for apk in ${JRD_PRODUCT_PACKAGES[@]}
+
+print调用关系的语句：
+
+
+如何查看build id:
+/device/tct/commom/build info
+
+新的msgm网站：
+172.24.61.28/msgm
+
+火狐18.0  /usr/bin/firefox
+火狐33.0  /usr/bin/firefox-old
+root密码：lwqmzl490n
+
+搜代码的网站：
+http://172.24.116.69:8080
+
+联系方式
+http://ep.tclcom.com/Pages/contacts.aspx
+
+bugzilla
+http://172.24.61.76/dx3/swd/Projects/Android/1-Application_Software_Section/6-%20Public/OneTouchHandbook/index.htm
+
+gerrit server
+http://gitweb.tcl-ta.com:8081/#settings
+
+NBgerrit server
+http://172.16.11.162:8081/#/q/jie.zhang%2540tcl.com,n,002e794f00016aaa
+
+ALM:
+http://alm.tclcom.com:7001/im;jsessionid=05C8ADE7581D26E0C6F1C62773EDB921?mks.commandRunner=100#2
+
+邮箱：
+文件夹消失时管理文件夹订阅
+mailsh.tct.tcl.com 143/25  None/None  Mormal password/Normal password
+ta-cn\adison.xu
+打印机驱动地址：
+172.24.63.254
+
+wifi有14个信道：
+2412 2417 2422 2427 2432 2437 2442 2447 2452 2457 2462 2467 2472 2484
+
+iperf使用
+1 手机做服务器 ./iperf -s -p 12345 -i 1  客户端./iperf -c 192.168.31.201 -p 12345 -i 1\
+
+去掉快捷方式：
+win+alt+右键
+
+wlanLoggingEnable=0
+adb shell iwpriv wlan0 setwlandbg 5 9 1
+adb shell iwpriv wlan0 setwlandbg 6 9 1
+adb shell iwpriv wlan0 setwlandbg 7 9 1
+
+wifi feature:
+1. connect/disconnected
+2. stability
+3. throughput
+4. hotspot
+5. miracast
+6. wifi direct
+7. dlna
+
+val联系方式：
+zhangwenwen 025-52668741
+zhanglong 025-52668751
+tianbinbin 025-52668740 
+lei_zhang 057427960894
+zhangwenwen 025-52668741
+lizhenzhen 66587
+
+http://epas2.tclcom.com/
+
+编译phantom版本的完整命令：
+unset NDK_BUILD;repo init -u git@172.24.61.94:alps/manifest -m mtk6595-kk-v1.0-dint.xml;repo sync;./makeMtk -o=TARGET_BUILD_VARIANT=eng phantom new;
+repo init -u git@172.24.61.94:alps/manifest -m mtk6595-kk-v1.0-dint.xml;repo sync;./makeMtk -t -o=jrd_modem_build=LTTG,TARGET_BUILD_VARIANT=eng phantom new
+
+rio5命令：
+repo init -u git@172.24.61.94:alps/manifest -m mt6582-lte-v1.0-dint.xml;repo sync;./makeMtk -o=TARGET_BUILD_VARIANT=eng,JRD_NFC_SUPPORT=no,JRD_HW_VERSION=proto rio_5 new
+hero8:
+repo init -u git@172.24.61.94:alps/manifest -m mt8392_android4.4_fsr_v1.0.xml;repo sync;./makeMtk -o=TARGET_BUILD_VARIANT=eng hero8 new
+repo init -u git@172.24.61.94:alps/manifest -m mt8392_android4.4_global_v1.0.xml;repo sync;./makeMtk -o=TARGET_BUILD_VARIANT=eng hero8 new
+
+编译Hero2命令：
+repo init -u git@172.24.61.94:alps/manifest -m mt6592-android4.4-global-v1.0.xml; repo sync;
+./makeMtk -o=TARGET_BUILD_VARIANT=eng hero2 new
+./makeMtk -t -o=TARGET_BUILD_MDTYPE=cmcc,TARGET_BUILD_VARIANT=eng hero2 new
+
+idol347 dailyversion:
+repo init -u git@172.24.61.94:quic/manifest -m int/idol347/vAEC-3-EU.xml;repo sync;source build/envsetup.sh;choosecombo 1 idol347 3 2 2;make -j8
+repo init -u git@172.24.61.94:quic/manifest -m int/idol347/vAAZ-3-TMO.xml;repo sync;source build/envsetup.sh;choosecombo 1 idol347 3 2 2;make -j8
+idol347
+repo init -u git@172.24.61.94:quicl/manifests.git -m l8936.xml;repo sync;source build/envsetup.sh;choosecombo 1 idol347 3 2 2;make -j8
+fsr branch:
+repo init -u git@172.24.61.94:quicl/manifests.git -m idol3_l8936_fsr.xml;repo sync;source build/envsetup.sh;choosecombo 1 idol347 3 2 2;make -j8
+
+alto5
+repo init -u git@172.24.61.94:quicl/manifests.git -m l8916.xml;repo sync;source build/envsetup.sh;choosecombo 1 alto5 3 2 2;make -j8
+修改Manifest.xml里面的ip地址，git commit
+repo init -u git@172.24.61.94:quicl/manifests -m l8916.xml;repo sync;source build/envsetup.sh;choosecombo 1 alto5 3 2 2;make -j8
+下载modem代码：
+git clone git@172.24.61.94:quicl/amss_8x36.git -b l8936
+
+idol3 5.5
+repo init -u git@172.16.11.162:quicl/manifests -m l8936.xml;repo sync;source build/envsetup.sh;choosecombo 1 idol3 3 2 2;make -j8
+repo init -u git@172.16.11.162:quicl/manifests -m ver/idol3/idol3_l8936_v7S1R_4.xml;repo sync;source build/envsetup.sh;choosecombo 1 idol3 3 2 2;make -j8
+alto5拉代码：
+repo init -u git@172.16.11.162:quicl/manifests -m l8916.xml;repo sync;source build/envsetup.sh;choosecombo 1 alto5 3 2 2;make -j8
+repo init -u git@172.16.11.162:quicl/manifests -m l8916_vdf_la2.1.xml;repo sync;source build/envsetup.sh;choosecombo 1 alto5_vdf 3 2 2;make -j8
+repo init -u git@172.16.11.162:quicl/manifests -m ver/alto5/alto5_l8916_v3H31_4.xml;repo sync;source build/envsetup.sh;choosecombo 1 alto5 3 2 2;make -j8
+tint8_att拉代码：
+repo init -u git@172.16.11.162:quicl/manifests -m tint8_att.xml;repo sync;source build/envsetup.sh;choosecombo 1 tint8_att 3 2 2;make -j8
+repo init -u git@172.16.11.162:quicl/manifests -m ver/tint8_att/tint8_att_tint8_att_v5B1P_1.xml;repo sync;source build/envsetup.sh;choosecombo 1 tint8_att 3 2 2;make -j8
+rio4g:
+repo init -u git@172.16.11.162:quickk/manifest -m ver/rio4g/rio4g_v9GF6_9.xml;repo sync;source build/envsetup.sh;choosecombo 1 tint8_att 3 2 2;make -j8
+
+daily版本对应网站：http://172.16.11.162/gitweb-fast/gitweb-quicl/?p=manifests.git;a=tree;f=ver/idol3;h=274131aec211d51bc003ff24a648c0e8eed2d70f;hb=master
+
+mockup板子开启Wifi:
+1 insmod /system/lib/modules/wlan.ko lsmod
+2 setprop ctl.start wpa_supplicant
+wpa_supplicant -iwlan0 -Dnl80211 -c/data/misc/wifi/wpa_supplicant.conf -dd -B
+3 wpa_cli -p /data/misc/wifi/sockets -iwlan0 
+4 ddms
+
+scan wifi的命令：
+iwlist wlan0 scan
+
+烧机
+1 开机密码int112233
+2 Alt3-4.7/tmp/10.22/SEC(Alt5 9008)
+3
+
+更新repo
+1 rm -rf repo
+2 curl http://172.24.218.195/int1/tools/repo > ~/bin/repo;chmod a+x ~/bin/repo
+3 vi repo;vi .bashrc
+4 which repo
+
+find命令的用法
+find ./ -name "test.txt" 
+
+方世龙分机号：0574-27960946-60946
+张杰：0574-27960484-60484
+
+KOA开通后自己补请假
+OT登记
+http://otreport.cn.ta-mp.com/login.aspx  报销到12月3日
+
+http://detail.tmall.com/item.htm?spm=a230r.1.14.298.q7d8iY&id=36784821912#
+http://detail.tmall.com/item.htm?spm=a230r.1.14.98.q7d8iY&id=18634101874
+
+adb push out/target/product/phantom/system/framework/framework2.odex system/framework/framework2.odex;adb push out/target/product/phantom/system/framework/framework2.jar.jex system/framework/framework2.jar.jex;adb push out/target/product/phantom/system/framework/framework2.jar system/framework/framework2.jar;
+adb push out/target/product/phantom/system/framework/ext.odex system/framework/ext.odex;adb push out/target/product/phantom/system/framework/ext.jar.jex system/framework/ext.jar.jex;adb push out/target/product/phantom/system/framework/ext.jar system/framework/ext.jar;adb push out/target/product/phantom/system/framework/framework.odex system/framework/framework.odex;adb push out/target/product/phantom/system/framework/framework.jar.jex system/framework/framework.jar.jex;adb push out/target/product/phantom/system/framework/framework.jar system/framework/framework.jar;
+
+http://my.oschina.net/innost/blog/126976
+
+联通手机号：13166298861
+NB电话：
+0574-27964218
+前台jiayu.shu@tcl.com
+看代码进度：
+1 已看完：
+jinbo.zhang  l8916/kk8916
+na.long      l8916/kk8916
+http://172.16.11.162:8081/#/q/owner:yu.feng%2540tcl.com+status:merged,n,z
+
+ruili.liu l8916/l8936
+jichen    l8916/l8936
+jie.zhang l8936/l8916
+
+insert into global(name, value) values('wifi_supplicant_scan_interval_ms', '40000');
+update global set value='40000' where name='wifi_supplicant_scan_interval_ms';
+
+(1)S:Settings:tether_settings_title_all
+(2)S:SystemUI:quick_settings_hotspot_label
+(3)S:frameworkscore:tethered_notification_title
+(4)S:Settings:usb_tethering_button_text
+(5)S:Settings:wifi_tether_configure_subtext
+(6)S:Settings:bluetooth_tether_checkbox_text
+(7)S:Settings:wifi_tether_checkbox_text
+(8)S:Settings:wifi_tether_configure_ap_text
+//wifi_tether_enabled_subtext          
+//tether_settings_title_usb
+
+./device/qcom/common/rootdir/etc/init.qcom.post_boot.sh
+backtocover 01944453
+
+wifistatemachine.java看到2048行
+
+http://blog.csdn.net/haomcu/article/details/8313926
+
+Only when first connect with a AP and durning connectting the AP suddenly offline
+
+04-21 19:56:49.103  2238  2238 V TctDrmLog/TctDrmManagerClient: File path after standardized is: /storage/sdcard0/Pictures/Screenshots
+
+def_tctfw_wifi_network_available_sound
+
+从底层到SoftapMonitor事实上是高通给的patch。
+另外supplicant跟softap不一样，你从wifi.c里就能看出
+一个连接的是/data/system/wpa_supplicant，而softap用的是/data/misc/wifi/hostapd
+
+def_settingsprovider_airplaneModeToggleableRadios
+sendMessageDelayed(obtainMessage(WifiManager.CONNECT_NETWORK,
+                                0, mLastNetworkId), LINK_FLAPPING_DEBOUNCE_MSEC);
+mSupplicantStateTracker.sendMessage(WifiManager.CONNECT_NETWORK);
+
+http://alm.tclcom.com:7001/im;jsessionid=05C8ADE7581D26E0C6F1C62773EDB921?mks.commandRunner=100#2
+
+

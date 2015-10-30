@@ -1,0 +1,209 @@
+mtk6592_wimdata_ng/wproceduresjrdsh/plf/isdm_SettingsProvider.plf  飞行模式下不能打开Wifi                                        (1)<SDMID>airplane_mode_toggleable_radios</SDMID> (2)参见PR735261
+base/packages/SettingsProvider/res/values/defaults.xml  wfd默认关闭，插电时才能使用hotspot默认睡眠模式
+src/com/android/providers/media/MediaProvider.java
+assets/html/hr/tethering_help.html
+assets/html/hr/tethering_wifi_help.html	 	
+src/com/jrdcom/wifitransfer/ui/InviteActivity.java  receiver history显示错误
+src/com/jrdcom/wifitransfer/ui/MainActivity.java    wifi transfer显示选中的内容，2分钟后应断开链接，链接不存在的组崩溃，分享文件前提示链接，增加邀请功能
+src/com/jrdcom/wifitransfer/service/TransferServer.java
+packages/apps/Settings/src/com/android/settings/TetherSettings.java  tethering help没有翻译，WiFi hotspot visibility，Tethering没有翻译选项，hotspot时旋转屏幕出现help                                                                                                                                              (1)private void showTetherDialog(int id){}
+src/com/jrdcom/tethering/TetheringActivity.java  tethering help没有翻译	
+mediatek/kernel/drivers/conn_soc/drv_wlan/mt_wifi/wlan/mgmt/rlm_domain.c  支持WiFi 5G，搜索不到149以后的channel，Wifi Direct和WFD搜索不到设备,disable 802.11a，Wifi全频段测试，Wifi channel定制                                                                                                               (1)COUNTRY_CODE_ZZ (2)COUNTRY_CODE_ID (3)static const UINT_16 g_u2CountryGroup21[]={COUNTRY_CODE_US}; (4)DOMAIN_INFO_ENTRY arSupportedRegDomains[] = {} (5)DOMAIN_INFO_ENTRY arSupportedRegDomains[] = {121, BAND_5G, CHNL_SPAN_20, 100, 5, FALSE},/*CH_SET_UNII_WW_100_116*/ (6)(PUINT_16) g_u2CountryGroup15, sizeof(g_u2CountryGroup15) / 2,{ 125, BAND_5G, CHNL_SPAN_10, 149, 9, FALSE }, /* CH_SET_UNII_UPPER_149_165 */
+mediatek/kernel/drivers/conn_soc/drv_wlan/mt_wifi/wlan/os/linux/gl_wext_priv.c    支持WiFi 5G，搜索不到149以后的channel                      (1)RF_CHANNEL_INFO_T aucChannelList[65];
+packages/apps/EngineerMode/src/com/mediatek/engineermode/wifi/ChannelInfo.java  支持WiFi 5G，增加163channel，20MHz和40MHz的channel没有分开            (1)final int[] mChannelFreq = {5580000, 5590000, 5600000, 5620000, 5630000, 5640000, 5660000, 5670000, 5680000, 5700000} (2)final String[] mChannelName = {"Channel 13 [2472MHz]"}; (3)final int[] mChannelFreq = {5815000,}                                                                             	
+build/target/product/common.mk  增加应用JrdWifi                                                                                                   (1)JrdWifiP2PTransfer \
+device/jrdcom/mtk6592/jrd_product_constant.mk  增加应用JrdWifi，统一icon，JrdWfiDisplay分离资源                                                            (1)增加JrdWfiDisplay (2)JrdWifiP2PTransfer\
+device/jrdcom/mtk6592/string_res.ini  增加内置应用                                                                                                      (1)./mediatek/packages/apps/JrdWifi/res (2)./packages/apps/JrdWifiP2PTransfer/res
+/mtk6592_wimdata_ng/wprocedures/hero2/isdm_sys_makefile.plf  增加内置应用                                                                  (1)<SDMID>JRD_PRODUCT_PACKAGES_JrdTethering</SDMID>  (2)<SDMID>JRD_PRODUCT_PACKAGES_JrdWifiP2PTransfer</SDMID>
+packages/apps/JrdWifiDisplay/Android.mk
+packages/apps/JrdWifiDisplay/src/com/jrdcom/wifidisplay/WifiDisplayActivity.java
+packages/apps/Settings/AndroidManifest.xml  快捷方式recent列表中没有出现Wlan，wfd时状态栏没有消失                                                     (1)<!-- android:excludeFromRecents="true"> -->	
+packages/apps/JrdWifiP2PTransfer/AndroidManifest.xml
+mtk6592_wimdata_ng/wprocedures/jrdsh/plf/isdm_framework-res.plf  增加Wifi 5G SDMID country code，修改hotspot默认名字，增加Def_framework_wifi_tx_2G4b_mode和Def_framework_wifi_tx_2G4g_mode，定制hotspot sleep time，Wifi转变为GPRS阈值为-100db,GPRS变为Wifi为-85db，定制wifi direct名字                              (1)VV:1~13 channel for 2.4G,support all 5G channel when 5G RF is supported. (2)增加SDMID Def_framework_wifi_tx_2G4b_mode (3)<SDMID>Def_framework_wifi_ap_ssid</SDMID> (4)<SDMID>Def_framework_wifi_ap_visible</SDMID> (5)<SDMID>def_framework_wifi_hotspot_time</SDMID>  (6)<SDMID>Def_framework_wifi_disconnect_threshold</SDMID> (7)<SDMID>Def_framework_wifi_direct_name</SDMID>
+frameworks/base/core/res/res/values/public.xml  wifi config，ipv4 & ipv6 support，定制hotspot睡眠机制，Wifi转变为GPRS阈值为-100db,GPRS变为Wifi为-85db，Wifi direct默认名字，wfd断开连接后自动重连                                                                                                               (1)<java-symbol type="integer" name="def_framework_wifi_hotspot_time"/>  (2)<java-symbol type="string" name="Def_framework_wifi_disconnect_threshold"/> (3)<java-symbol type="string" name="Def_framework_wifi_direct_name"/>
+frameworks/base/packages/SettingsProvider/src/com/android/providers/settings/DatabaseHelper.java 定制hotspot睡眠机制                        (1)loadIntegerSetting(stmt, Settings.System.WIFI_HOTSPOT_AUTO_DISABLE, com.android.internal.R.integer.def_framework_wifi_hotspot_time);	
+frameworks/base/services/java/com/android/server/wifi/WifiService.java  测试载波抑制，重启后Wifi状态不变，加密没成功重启，第一次开机时启动Wifi，低存储空间提醒机制，wifi channel定制，关机闹铃不能自动搜索网络，AP改变channel不能连接，定制softap channel，搜索WPS open AP无提示                         (1)Settings.Global.getInt(getContentResolver(), Settings.Global.WIFI_ON); (2)intent.getAction().equals(ACTION_DISK_SPACE_LOWER_ON);Settings.Global.putInt(cr, Settings.Global.WIFI_SAVED_STATE, 1);Settings.Global.putInt(cr, ACTION_DISK_SPACE_LOWER_ON, 1); (3)String[] preferredChannels = {"1","2","3","4","5","6","7","8","9","10","11"}; (4)boolean isFirstBoot=(Settings.Global.getInt(cr, "wifi_first_boot", 1) == 1) ?true : false;String isEncript = SystemProperties.get("vold.decrypt"); (5)(scanResult.capabilities.equals("[ESS]") || scanResult.capabilities.equals("[WPS][ESS]")) (6)filter.addAction(PowerManagerService.IPO_BOOT); Settings.Global.putInt(mContext.getContentResolver(), Settings.Global.WIFI_SAVED_STATE, 0); setWifiEnabled(true);
+frameworks/base/wifi/java/android/net/wifi/WifiStateMachine.java  IPV4时不显示IPV6地址，不应该搜索到14channel，修改hotspot睡眠机制，开机时不设置country code，搜索不到12/13信道，定制WiFi MTU size，wifi自动断开连接，AP改变channel不能连接，Wifi转变为GPRS阈值为-100db,GPRS变为Wifi为-85db                          (1)String customMTUSizeStr = getResources().getString(com.android.internal.R.string.def_framework_wifi_mtu);  (2)NetworkUtils.setMtuByInterface("wlan0", 1500); (3)removeMessages(WifiManager.SET_WIFI_DISCONNECT); sendMessageDelayed(obtainMessage(WifiManager.SET_WIFI_DISCONNECT, 0, -1), 30*1000);  (4)countryStr.trim().equalsIgnoreCase("CN") == false; (5)Settings.Global.putInt(mContext.getContentResolver(), AP_SUPPORT_IPV6, 1); (5)mIsGPRSDisabled = Settings.Secure.getInt(mContext.getContentResolver(), Settings.Global.MOBILE_DATA, 1) != 1; (6)slot = SIMInfo.getSlotById(mContext, currentDataConnectionMultiSimId);
+packages/apps/Settings/src/com/mediatek/wifi/hotspot/TetherWifiSettings.java  Hide SSID，设置always时hotspot会关闭，定制hotspot睡眠时间，预配置AP            (1)private CheckBoxPreference mBroadcastSsid;mWifiConfig.hiddenSSID = !mBroadcastSsid.isChecked(); (2)Global.putInt(getContentResolver(), System.WIFI_HOTSPOT_AUTO_DISABLE, Integer.parseInt(((String) value)));	
+frameworks/base/services/java/com/android/server/ConnectivityService.java  修改Wifi channel定制规则，加密导致启动失败，定制tx power                         (1)int defaultBandEdgeOFDM40 = mContext.getResources().getInteger(com.android.internal.R.integer.Def_framework_band_edge_OFDM40); (2)persistNvRamSet(wst.writeNvram(countryCode, defaultBandEdgeOFDM40)); (3)String countryStr = mContext.getResources().getString(com.android.internal.R.string.Def_framework_wifi_channel_config); (4)Settings.Secure.getInt(cr, WIFI_NVRAM_SET, 0) == 0; (5)countryStr = DEFAULT_COUNTRY_CODE; (6)mNetTrackers[targetNetworkType].startMonitoring(context, mTrackerHandler);
+mediatek/kernel/drivers/combo/drv_wlan/mt6628/wlan/os/linux/gl_p2p_cfg80211.c  解锁后自动重连失败                                                        (1)printk("blocklist-sta[%d]---%d \n", i, MAC2STR(prGlueInfo->prP2PInfo->aucblackMACList[i]));
+kernel/drivers/combo/drv_wlan/mt6628/wlan/os/linux/gl_p2p_kal.c	
+src/com/android/settings/wifi/AdvancedWifiSettings.java  隐藏Wi-Fi suspend optimizations，two Bell WIFI profiles，不显示IPV6地址，安装手机中的证书时Settings崩溃                                                                                                                                                   (1)int hasIpv6Address = Settings.Global.getInt(getContentResolver(), "ap.support.ipv6", -1); (2)boolean ipv4SupportOnly = getResources().getBoolean(com.android.internal.R.bool.def_framework_ipv4_only); (3)getPreferenceScreen().removePreference(mIpv6AddressPref);
+src/com/android/settings/wifi/WifiConfigController.java  IPV4时不显示IPV6地址，自动链接隐藏AP，添加AP时没有出现高级选项                                      (1)ipAddresses[1].indexOf("; ") == AdvancedWifiSettings.NOT_FOUND_STRING  (2)/*if (mAccessPoint == null*/注释掉一段代码
+mtk6582_wimdata_ng/wprocedures/jrdsh/plf/isdm_Settings.plf  修改security的comment，增加预制AP，定制hotspot可见性，隐藏Wifi direct                           (1)<SDMID>Def_Settings_wifi_network_exist</SDMID> <DESC>this SDM represents the num of pre-configure ap, default is 0x00, no pre configured ap. (2)<SDMID>Def_Settings_hotspot_enable</SDMID>  (3)<SDMID>Def_Settings_wifi_priority</SDMID> (3)<SDMID>Def_Settings_wifi_sim_slot</SDMID>
+src/com/jrdcom/wifitransfer/group/GroupConnector.java  Wifi transfer断开后没有自动连接原来的AP
+base/packages/SystemUI/src/com/android/systemui/statusbar/toolbar/QuickSettingsConnectionModel.java  飞行模式不能打开Wifi，notification panel增加hotspot，快速设置指导界面，Wifi开关显示网络名称                                                                                                                 (1)String toggleableRadios = Settings.Global.getString(mContext.getContentResolver(), Settings.Global.AIRPLANE_MODE_TOGGLEABLE_RADIOS);toggleableRadios.contains(Settings.Global.RADIO_WIFI) (2)int airplaneModeOn = Settings.Global.getInt(mContext.getContentResolver(), Settings.System.AIRPLANE_MODE_ON, 0); mWifiStateTracker.setAirlineMode(true); mWifiTileView.setEnabled(mWifiStateTracker.isClickable()); (3)private final class WifiHotspotStateTracker extends StateTracker{}
+src/com/android/settings/wifi/WifiEnabler.java
+src/com/jrdcom/wifitransfer/group/GroupTools.java
+src/com/jrdcom/wifitransfer/ui/HistoryFragment.java  解除飞行模式挂掉
+src/com/jrdcom/wifitransfer/ui/MusicFragment.java
+src/com/jrdcom/wifitransfer/ui/PhotoFragment.java
+src/com/jrdcom/wifitransfer/ui/PictureFragment.java
+src/com/jrdcom/wifitransfer/ui/VideoFragment.java
+frameworks/base/wifi/java/android/net/wifi/p2p/WifiP2pService.java  定制wifi direct名字，改变主题为白底黑字，A不能连接C，断开连接3次后无法搜索到对方，断开连接后另一方状态没同步，取消邀请原来的连接断开，wifi direct时关闭wifi仍然显示连接，拒绝断开Wifi应停止连接，wifi direct时不能使用wfd                               (1)String name = mContext.getResources().getString(com.android.internal.R.string.Def_framework_wifi_direct_name); (2)
+packages/apps/Settings/src/com/android/settings/wifi/p2p/WifiP2pSettings.java  断开WFD连接Wifi Direct，Wifi direct断开连接后不能自动搜索，wifi direct重命名时中文10个英文32个                                                                                                                                         (1)mWifiDisplayStatus = mDisplayManager.getWifiDisplayStatus();
+mediatek/packages/apps/EngineerMode/src/com/mediatek/engineermode/wifi/WiFiTx6620.java  20MHz和40MHz的channel没有分开，WIFI非信令发射功率异常，测试模式没有载波抑制                                                                                                                                                  (1)mTargetModeIndex = mModeIndex; (2)mChannel.insert5GChannelsIntoAdapter(mChannelAdapter); (3)mCCKRateSelected = false;
+packages/apps/Settings/src/com/android/settings/wifi/WifiSettings.java  关闭Wifi时提示搜索WLAN，点击已链接AP弹出输入法对话框，不能自动链接AP2，modify network时崩溃，添加隐藏网络不能自动连接，多次添加隐藏AP，AP不能被forget，AP forget后自动连接，双SIM卡贝尔定制，增加预置AP，隐藏Wifi direct，自动连接预置AP，修正黑色弹出框的问题，插入无线鼠标界面变黑，添加网络底部被键盘挡住                                                                                             (1)mWifiManager.getConnectionInfo().getNetworkId(); (2)List<WifiConfiguration> configs=mWifiManager.getConfiguredNetworks(); (3)mWifiManager.connect(config, mConnectListener);mManuallyConnect = true; (4)mPredefineApLoader.loadPredefineNetworks(isSIM1Inserted, isSIM2Inserted); simInserted[i] = mTelephonyEx.hasIccCard(i); (5)mFilter.addAction(TelephonyIntents.ACTION_SIM_STATE_CHANGED); (6)mWifiManager.save(config, null); (7)mDialogFragment.show(getActivity().getFragmentManager(), Integer.toString(dialogId)); (8)private boolean showInputMethodDialog = false; (9)if(mSelectedAccessPoint.networkId == INVALID_NETWORK_ID) {showDialog(mSelectedAccessPoint, true);} (10)updateAccessPoints();
+frameworks/base/services/java/com/android/server/display/WifiDisplayController.java  连接wfd时要求断开Wifi direct，从状态栏断开连接popup box应该断开连接，修改名字后重新连接名字没有改变，多次连接弹出“Current is lost”
+system/core/init/property_service.c  格式化后连接手机自动重启，播放视频后断开Wifi只显示连接过的AP                                                       (1)#define PA_COUNT_MAX 503	
+custom/common/hal/ant/mt6620_ant_m3/mt6620_ant_m3.cfg  修正Wifi强度
+packages/apps/Settings/res/layout/wifi_dialog.xml  光标自动定位密码输入框
+base/wifi/java/android/net/wifi/WifiNative.java  Wifi 5G定制，disable google default country code machinism，不同国家Wifi channel定制，GC不能邀请人加入group                                                                                                                                             (1)public boolean setCountryCode(String countryCode) 
+mediatek/packages/apps/EngineerMode/src/com/mediatek/engineermode/wifi/WiFiRx6620.java  20MHz和40MHz的channel没有分开  (1)mChannel.insert5GChannelsIntoAdapter(mChannelAdapter);
+src/com/android/settings/wifi/WifiReceiver.java	 与sim相关的预制AP，预制AP保持链接	
+mediatek/custom/jrdsh92_wet_jb9/cgen/cfgdefault/CFG_WIFI_Default.h  无法扫描到信道140，Wifi定制，修改Wi-Fi发射功率，5G下接收速率偏小，更改默认国家为CN，关闭2.4GHz band edge power                                                                                                                                 (1)0x24=36=18*2对应11g，0x2A=42=21*2对应11b  (2)stWifiCfgDefault={0x43,0x4E}/*COUNTRY CODE*/(0x43代表'C',0x43代表'N',factory reset生效) (3)WIFI_CFG_PARAM_STRUCT stWifiCfgDefault={ 0x45, 0x55 },/* COUNTRY CODE*/(默认国家为EU) (4)0x00, //2.4GHz band edge power disabled
+mediatek/custom/jrdsh92_wet_tdd/cgen/cfgdefault/CFG_WIFI_Default.h  无法扫描到信道140，关闭2.4GHz band edge power                                 (1)0x00, //2.4GHz band edge power disabled	
+frameworks/base/packages/SystemUI/ext/src/com/mediatek/systemui/ext/QuickSettingsTileViewId.java  添加hotspot到状态栏面板                            (1)public enum QuickSettingsTileViewId {ID_WifiHotspot,}	 	
+frameworks/base/packages/SystemUI/src/com/android/systemui/statusbar/phone/QuickSettings.java  添加hotspot到状态栏面板，fota升级TVLink图标显示不正常，去掉Screen share应用                                                                                                         (1)mQuickSettingsConnectionModel.addWifiHotspotTile(wifiHotspotTile); (2)if (!FeatureOption.MTK_WIFI_HOTSPOT_SUPPORT || !(mContext.getResources().getBoolean(com.android.internal.R.bool.def_hotspot_enable))) { wifiHotspotTile.setVisibility(View.GONE); } (3)mQuickSettingsConnectionModel.setQuickSettingsTileView(wifiTile,wifihotspotTile, audioShareTile, multiScreenTile, bluetoothTile, gpsTile, dataConnectionTile
+src/com/android/settings/wifi/WifiDialog.java  用户不能删除预置AP，光标自动定位输入框，添加网络时加密方式显示不正常
+base/services/java/com/android/server/wifi/WifiNotificationController.java
+mediatek/kernel/drivers/conn_soc/drv_wlan/mt_wifi/wlan/common/wlan_oid.c 扫描AP太慢                                                               (1)u2SubId == 0x1251,prAdapter->aePreferBand[NETWORK_TYPE_AIS_INDEX] = BAND_2G4;		 	
+packages/apps/Settings/ext/src/com/mediatek/settings/ext/DefaultWifiApDialogExt.java  hotspot加密方式没有WPA PSK                                 (1)mWps2Test = "true".equals(SystemProperties.get(KEY_PROP_WPS2_SUPPORT, "false")); 	
+packages/apps/Settings/src/com/android/settings/Utils.java  hotspot加密方式没有WPA PSK                                                                (1)ext = (IWifiApDialogExt)PluginManager.createPluginObject(context, IWifiApDialogExt.class.getName());	 	
+packages/apps/Settings/src/com/android/settings/wifi/WifiApDialog.java  点击factory reset时SSID改变，去掉定制hotspot channel，旋转屏幕，定制softap channel，每台softap默认的名字和密码不一样，横竖屏切换时列表消失                                                                                                     (1)mLinearLayout.removeView(mView.findViewById(R.id.channel_text));(2)String[] preferredChannels = mWifiManager.getAccessPointPreferredChannels();(3)mContext.getResources().getBoolean(com.android.internal.R.bool.Def_framework_softap_auto_generation_enable));mContext.getString(com.android.internal.R.string.Def_framework_softap_ssid)+ generateRandomString(numberChar, 8)  (4)if(mMaxConnSpinner != null && mMaxConnSpinner.isPopupShowing()) { mMaxConnSpinner.dismissPopup(); }	
+src/drivers/driver_nl80211.c  扫描AP太慢                                                                                                    (1)wpa_supplicant_event(drv->ctx, EVENT_CHANNEL_LIST_CHANGED, NULL); wpa_driver_nl80211_driver_sw_cmd(priv, 1, &sw_cmd, &idx);
+external/wpa_supplicant_8/wpa_supplicant/Android.mk  AP A和B的问题，扫描AP比较慢
+external/wpa_supplicant_8/wpa_supplicant/ctrl_iface.c  扫描AP比较慢，连接hotspot自动断开，hidden hotspot feature                                     (1)wpa_s->ignore_broadcast_ssid = atoi(value); (2)eloop_cancel_timeout(wpa_supplicant_req_5g_scan, wpa_s, NULL);eloop_register_timeout(1, 0, wpa_supplicant_req_5g_scan, wpa_s, NULL);
+mtk6592_wimdata_ng/wprocedures/jrdsh/isdm_sys_properties.plf  Wifi转变为GPRS阈值为-100db,GPRS变为Wifi为-85db，hotspot DHCP定时器到2小时                      (1)<SDMID>ro.wifi.dhcp.least.time</SDMID>  (2)<SDMID>wifi.connect.threshold</SDMID>
+base/packages/SystemUI/ext/src/com/mediatek/systemui/ext/DefaultStatusBarPlugin.java
+packages/apps/Settings/src/com/android/settings/CreateShortcut.java  快捷方式中有hotspot而Settings中没有hotspot	 
+frameworks/base/wifi/java/android/net/wifi/WifiConfiguration.java  不能删除预制AP                                                                (1)dest.writeInt(isBellSsid); 	
+src/com/android/settings/wifi/PredefineApLoader.java 预制AP，退出settingsWifi断开，没有设置自动链接仍然自动链接
+external/wpa_supplicant_8/src/p2p/p2p.c  连接不同AP不能进行wifi direct，断开连接后不能搜索到对方，不能连接dongle	 	
+base/services/java/com/android/server/wifi/WifiSettingsStore.java
+external/wpa_supplicant_8/wpa_supplicant/config.c  增加预制AP，禁止删除或修改预制AP                                                                        (1){ INT_RANGE(define_priority, 1, 5) } (2){ INT_RANGE(is_define_ap, 0, 1) },
+external/wpa_supplicant_8/wpa_supplicant/config_file.c  增加预制AP，禁止删除或修改预制AP                                                                (1)INT(is_define_ap); (2)INT(is_bell_ssid);
+external/wpa_supplicant_8/wpa_supplicant/config_ssid.h
+external/wpa_supplicant_8/wpa_supplicant/config_winreg.c
+base/wifi/java/android/net/wifi/WifiConfigStore.java  增加预制AP，链接到Vodafone WiFi无反应， 禁止修改或者修改AP                              (1)mWifiNative.getNetworkVariable(netId, WifiConfiguration.defineApVarName); (2)configNetwork.priority = mLastPriority + configNetwork.priority; addOrUpdateNetworkNative(configNetwork); mWifiNative.setNetworkVariable(netId, WifiConfiguration.defineApVarName, Integer.toString(config.isDefineAp ? 1 : 0))	 	 	
+src/com/android/settings/wifi/AccessPoint.java  forget后仍有连接问题，增加predefined wifi account，不能删除或修改预制AP                   (1)isDefineAp=config.isDefineAp;mAccessPoint.isDefineAp
+base/core/java/android/provider/Settings.java
+base/packages/SystemUI/src/com/mediatek/systemui/statusbar/util/StateTracker.java  反复点击Wifi/hotspot
+frameworks/base/services/java/com/android/server/NetworkManagementService.java  hidden hotspot feature (1)wifiConfig.hiddenSSID==true;mConnector.execute("softap", "set", wlanIface, wifiConfig.SSID, getSecurityType(wifiConfig), wifiConfig.preSharedKey, wifiConfig.channel, wifiConfig.channelWidth, clientNum, userWantsHoptspotSuspendOpt, "0", "8", mhiddenSSID);
+base/wifi/java/android/net/wifi/WifiApConfigStore.java  hotspot SSID，改变每台softap的默认SSID和密码                                                 (1)String plfPassword=mContext.getString(com.android.internal.R.string.Def_framework_wifi_ap_passward); (2)config.hiddenSSID=(in.readInt()==1)?true: false; (3)config.SSID = "TCL H900M";	
+kernel/drivers/conn_soc/drv_wlan/mt_wifi/wlan/mgmt/scan.c  连接wfd一段时间暗屏后重启	 			 	
+kernel/drivers/conn_soc/drv_wlan/mt_wifi/wlan/include/nic_cmd_event.h  Wifi 5G RX值偏小  (1)UINT_8 fgHiddenSsidMode;
+mediatek/kernel/drivers/conn_soc/drv_wlan/mt_wifi/wlan/mgmt/p2p_func.c  电脑连接hotspot乱跳，hidden hotspot feature，10次才能连接上hotspot                 (1)prP2pBssInfo->u2CapInfo (2)P_P2P_FSM_INFO_T prP2pFsmInfo=(P_P2P_FSM_INFO_T)NULL;P_P2P_CHNL_REQ_INFO_T prChnlReqInfo=&prAdapter->rWifiVar.prP2pFsmInfo->rChnlReqInfo;
+mediatek/kernel/drivers/conn_soc/drv_wlan/mt_wifi/wlan/nic/nic.c  hidden hotspot feature                                                 (1)rCmdSetBssInfo.fgHiddenSsidMode=prBssInfo->eHiddenSsidType;
+mediatek/kernel/drivers/conn_soc/drv_wlan/mt_wifi/wlan/mgmt/bss.c  hidden hotspot feature                                                              (1)SSID_IE(pucBuffer)->ucLength=prBssInfo->ucSSIDLen	
+frameworks/base/wifi/java/android/net/wifi/WifiStateTracker.java  Wifi channel定制，b/g模式功率定制，wifi bande edge                                        (1)public boolean writeNvram(String countryCode, int txPower_2G4b_mode, int txPower_2G4g_mode)  （2）cfg[txPower_2G4b_mode_begin]=(byte) txPower_2G4b_mode*2; (3)IBinder binder=ServiceManager.getService("NvRAMAgent");NvRAMAgent agent=NvRAMAgent.Stub.asInterface(binder);
+base/wifi/java/android/net/wifi/WifiEnterpriseConfig.java  定制perso无法自动连接AP，增加预制AP                                                (1)setEapMethod(methodIndex);setPhase2Method(methodIndex);
+wpa_supplicant/wpa_supplicant_i.h		
+external/wpa_supplicant_8/wpa_supplicant/ap.c  hidden hotspot feature                                                                                (1)bss->ignore_broadcast_ssid = wpa_s->ignore_broadcast_ssid;	 	
+system/netd/SoftapController_mtk.cpp  hide hotspot feature                                                                                             (1)ret = setConfig("hidden_ssid", argv[12]);
+base/wifi/java/android/net/wifi/NvRAMAgent.java
+system/netd/TetherController.cpp  DHCP lease timer                                                                                                    (1)char least_time[PROPERTY_VALUE_MAX];property_get("ro.wifi.dhcp.least.time",least_time,"120m");asprintf(&(args[nextArg++]),"--dhcp-range=%s,%s,%s", start, end, least_time); 	
+system/netd/SoftapController.cpp  定制softap channel                                                                                                   (1)channel=atoi(argv[5]);
+external/mtk_wifi/mt6582_vdf/Android.mk
+mtk6582_wimdata_ng/wprocedures/jrdsh/plf/Android.mk
+core/main.mk  插入USB状态栏没显示                                                                                                                       (1)ADDITIONAL_DEFAULT_PROPERTIES += persist.sys.usb.config=mtp 	
+tools/post_process_props.py		 	
+res/values/mtk_arrays.xml	
+frameworks/base/wifi/java/android/net/wifi/WifiManager.java  改变Wifi channel无法自动连接，对比机AP信号显示弱，Wifi转变为GPRS阈值为-100db,GPRS变为Wifi为-85db  (1)if(rssi <= MIN_RSSI) return 0;
+config/hero8/ProjectConfig.mk  AP A和B的问题，删除WAPI certification选项，开启EAP-SIM和EAP-AKA                                                         (1)JRD_WIFI_STAGE_SCAN，CONFIG_MTK_STAGE_SCAN （2）MTK_WAPI_SUPPORT = no (3)MTK_EAP_SIM_AKA = yes
+src/com/android/settings/widget/SettingsAppWidgetProvider.java  飞行模式打开wifi有提示	                                                               （1）boolean isAirplaneModeOn = Settings.System.getInt(context.getContentResolver(), Settings.System.AIRPLANE_MODE_ON, 0) == 1;	
+dhcpcd.c  链接wfd时不能浏览网页
+if-linux.c  wfd时不能浏览网页                                                                                                                            （1）metric = rt->metric + 20000;
+base/core/java/android/os/INetworkManagementService.aidl  wfd时不能浏览网页                                                                             （1）void clearArpCache(String ifc);	 	
+netd/CommandListener.cpp  
+netd/InterfaceController.cpp  wfd时不能浏览网页                                                                                                         （1）system_nosh(arp_cmd);
+netd/InterfaceController.h
+kernel/drivers/conn_soc/drv_wlan/mt_wifi/wlan/include/mgmt/ais_fsm.h	 	
+kernel/drivers/conn_soc/drv_wlan/mt_wifi/wlan/mgmt/ais_fsm.c  断开连接3次后无法搜索到对方
+kernel/drivers/combo/drv_wlan/mt6620/wlan/os/linux/gl_kal.c  不操作一段时间不能搜索AP
+packages/apps/Settings/src/com/android/settings/wfd/WifiDisplaySettings.java  WFD没有打开时显示To see devices, turn TV link on，飞行模式下打开WFD，断开WFD连接WifiDirect，连接wfd时icon没有转动，home键或者返回键退出wfd，forget dongle导致崩溃，解锁后popup box仍在搜索，连接成功后消息框没有自动消失，再次进入wifi direct自动打开                                                                                                                                                 (1)if(mWifiDisplayStatus != null && mWifiDisplayStatus.getFeatureState() == WifiDisplayStatus.FEATURE_STATE_ON) { (2)item.setEnabled(false); (3)mEmptyView.setText(R.string.wifi_display_settings_empty_list_wifi_display_off); (4)onCreateDialog(DIALOG_DISCONNECT_DISPLAY).show();
+base/services/java/com/android/server/display/LogicalDisplay.java  TV为4:3时手机只支持16：9                                                 (1)displayRectWidth = (int)(displayRectWidth * ANTI_OVERSCAN_RATIO);
+kernel/drivers/conn_soc/drv_wlan/mt_wifi/wlan/include/mgmt/rlm_domain.h
+packages/apps/JrdWifi/src/com/jrdcom/wifi/WifiActivity.java
+external/mtk_wifi/wpa_supplicant_8_lib/mediatek_driver_cmd_nl80211.c  扫描AP比较慢
+kernel/drivers/conn_soc/drv_wlan/mt_wifi/wlan/common/wlan_oid.c  扫描AP比较慢	 	 	
+external/wpa_supplicant_8/wpa_supplicant/android.config  AP搜索比较慢，Wifi direct断开连接后不能再次连接
+src/com/android/settings/wifi/WifiPreconfigAPReceiver.java
+kernel/drivers/conn_soc/drv_wlan/mt_wifi/wlan/common/wlan_lib.c  wifi接收功率偏小
+kernel/drivers/conn_soc/drv_wlan/mt_wifi/wlan/include/CFG_Wifi_File.h	 
+kernel/drivers/conn_soc/drv_wlan/mt_wifi/wlan/include/wlan_lib.h
+kernel/drivers/conn_soc/drv_wlan/mt_wifi/wlan/os/linux/gl_init.c	 
+src/com/android/phone/wfd/CallPresentation.java
+src/com/android/phone/wfd/MirrorModeManager.java
+src/com/android/phone/wfd/MirrorModeReciver.java
+src/com/android/phone/wfd/MirrorModeService.java
+res/values/arrays.xml  删除WAPI certification选项
+src/com/jrdcom/gallery3d/app/wfd/WFDMovieActivity.java
+hero8/local.config
+mediatek/jrdsh92_wet_jb9/artifacts/out/target/product/jrdsh92_wet_jb9/obj/lib/libvcodecdrv.so  v102时1080p图像重叠 	
+external/mtk_wifi/wpa_supplicant_8_lib/Android.mk	 	
+custom/common/hal/combo/mt6572_82/mt6572_82_patch_e1_0_hdr.bin  Wifi不能开启和关闭
+external/wpa_supplicant_8/wpa_supplicant/events.c  Wifi转变为GPRS阈值为-100db,GPRS变为Wifi为-85db                                                            (1)if(bss->level > 0 && bss->level < atoi(wifi_connect_threshold)) { wpa_printf(MSG_DEBUG, "connect threshold %d",atoi(wifi_connect_threshold)); }
+packages/apps/Settings/src/com/android/settings/WirelessSettings.java  取消隐藏Tethering & portable hotspot                                    (1)getPreferenceScreen().removePreference(mTetherSettings);	
+mediatek/kernel/drivers/conn_soc/drv_wlan/mt_wifi/wlan/mgmt/p2p_scan.c  使用5Gchannel时不能连接Wifi Direct                                              (1)if(prWlanBeaconFrame->u2FrameCtrl & MASK_FRAME_TYPE) == MAC_FRAME_BEACON) {//TX Beacon fgIsSkipThisBeacon=TRUE; }    
+external/wpa_supplicant_8/src/p2p/p2p_utils.c  使用5Gchannel时不能连接Wifi Direct                                                                       (1)if (channel < 149 || channel > 169)
+external/wpa_supplicant_8/src/p2p/p2p_invitation.c  wifi direct连接第二个时没收到邀请
+external/wpa_supplicant_8/wpa_supplicant/p2p_supplicant.c  A没有收到C的邀请，断开连接后另一方状态没同步，连接wifi direct时不能使用wfd
+src/com/android/wifidirecttransfer/util/Constants.java  断开wifi direct时弹出"Incoming file"
+src/com/android/wifidirecttransfer/util/WifiDirectReceiveFileInfo.java  wifi direct接受文件时重启声音异常
+src/com/android/wifidirecttransfer/server/WifiDirectService.java  界面显示白底黑字	 
+src/com/android/settings/wifi/p2p/WifiP2pPeer.java  搜索到的设备图标显示不清楚
+src/com/android/wifidirecttransfer/activity/WifiP2pPeer.java  提示信息没有翻译
+mediatek/kernel/drivers/combo/drv_wlan/mt6620/wlan/mgmt/bss.c  邀请后消失
+mediatek/kernel/drivers/combo/drv_wlan/mt6620/wlan/include/mgmt/p2p_func.h
+mediatek/kernel/drivers/combo/drv_wlan/mt6620/wlan/nic/que_mgt.c  B邀请C无法连接
+base/services/java/com/android/server/connectivity/Tethering.java  从状态栏启动hotspot变黑
+av/media/libstagefright/chromium_http/support.cpp  定制DLNA
+kernel/drivers/combo/drv_wlan/mt6620/wlan/mgmt/p2p_fsm.c  GC再次邀请GO GO重启，3次断开连接后不能接受邀请
+frameworks/base/core/java/android/net/DhcpStateMachine.java  不能手动连接open AP
+external/wpa_supplicant_8/wpa_supplicant/offchannel.c	
+kernel/drivers/combo/drv_wlan/mt6620/wlan/include/nic/que_mgt.h
+kernel/drivers/combo/drv_wlan/mt6620/wlan/mgmt/scan_fsm.c
+system/core/init/property_service.c  长期使用hotspot不关闭，Wifi为灰不能自动使用
+packages/apps/Settings/src/com/android/settings/wfd/quicksettings/QuickWifiDisplayActivity.java  home键或者返回键退出wfd，从状态栏断开连接popup box仍然连接，wfd时无法横屏显示，连接失败点击返回按钮
+packages/apps/Settings/src/com/android/settings/wfd/quicksettings/WifiDisplayAvailableAdapter.java  改变名字后重新连接名字没有改变
+packages/apps/JrdGallery/src/com/jrdcom/android/gallery3d/app/AlbumPage.java  无线传屏的小窗口无效	
+mtk6592_wimdata_ng/wprocedures/hero2/custpack_app_list.mk  快捷方式自动连接dongle
+base/services/java/com/android/server/power/ShutdownThread.java
+base/services/java/com/android/server/display/WifiDisplayAdapter.java
+src/com/android/settings/wfd/quicksettings/SmartbookUtils.java
+packages/apps/Settings/res/values/themes.xml  标题栏和底部变黑
+frameworks-ext/av/media/libstagefright/wifi-display-mediatek/source/WifiDisplaySource.cpp
+frameworks-ext/av/media/libstagefright/wifi-display-mediatek/uibc/UibcServerHandler.cpp
+frameworks-ext/av/media/libstagefright/wifi-display-mediatek/uibc/UibcHandler.cpp
+frameworks-ext/av/media/libstagefright/wifi-display-mediatek/rtp/RTPSender.cpp  反复连接三次从状态栏无法进入搜索对话框
+src/com/jrdcom/wifitransfer/ui/MainActivity.java		
+src/com/jrdcom/wifitransfer/WifiTransferApplication.java  跑monkey崩溃的问题
+packages/apps/JrdGallery/src/com/jrdcom/gallery3d/app/PhotoPage.java  断开连接wfd按钮仍显示连接状态
+packages/apps/Settings/src/com/android/settings/DisplaySettings.java
+frameworks/base/services/java/com/android/server/SystemServer.java
+packages/apps/JrdWifiTransfer/src/com/jrdcom/wifitransfer/ui/CreateOrModifyUser.java  Arabic语言菜单没有靠右显示，wifi direct退后三次显示消息太长
+packages/apps/JrdWifiTransfer/res/layout-1920x800/connect_friend_dialog.xml
+packages/apps/JrdWifiTransfer/res/layout-ldrtl/invite_layout.xml
+frameworks/av/media/libstagefright/wifi-display/Android.mk  wfd时编辑信息键盘没显示
+src/com/android/wifidirecttransfer/util/WifiDirectUtility.java  重启手机后传输记录显示“Unknown devic”		
+src/com/android/settings/deviceinfo/Status.java  点击about phone/status强制关闭，IP地址大小写
+base/core/java/android/hardware/display/DisplayManagerGlobal.java  wfd scan导致崩溃	
+packages/apps/JrdWifiP2PTransfer/src/com/android/wifidirecttransfer/database/WifiDirectProvider.java
+packages/apps/Settings/src/com/android/settings/wifi/p2p/WifiP2pPersistentGroup.java  wifi direct名字被截断	 
+res/values/styles.xml
+jrdhz/plf/isdm_JrdGallery.plf
+res/layout/name_credential_dialog.xml  插入证书时按钮被遮挡
+src/com/jrdcom/wifitransfer/group/GroupSocket.java  横屏代码
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

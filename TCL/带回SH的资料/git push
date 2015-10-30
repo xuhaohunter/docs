@@ -1,0 +1,42 @@
+git push ssh://adison.xu@172.24.61.94:29418/jrd/packages/apps/JrdGallery HEAD:refs/for/jrd-android4.4-dev
+
+git push ssh://adison.xu@172.24.61.94:29418/mtk6595/packages/apps/Settings HEAD:refs/for/mtk6595-kk-v1.0-dint
+
+git push ssh://adison.xu@172.24.61.94:29418/mtk6595/packages/apps/Bluetooth HEAD:refs/for/mtk6595-kk-v1.0-dint
+
+git push ssh://adison.xu@172.24.61.94:29418/mtk6595/mtk6595_wimdata_ng/wprocedures HEAD:refs/for/mtk6595-kk-v1.0-dint
+
+git push ssh://adison.xu@172.24.61.94:29418/mtk6595/mediatek HEAD:refs/for/mtk6595-kk-v1.0-dint
+
+mtk6592
+git push ssh://adison.xu@172.24.61.94:29418/mtk6592/packages/apps/Bluetooth HEAD:refs/for/mt8392_android4.4_global_v1.0
+git push ssh://adison.xu@172.24.61.94:29418/mtk6592/mediatek HEAD:refs/for/mt8392_android4.4_global_v1.0
+git push ssh://adison.xu@172.24.61.94:29418/mtk6592/frameworks HEAD:refs/for/mt6592-android4.4-global-v1.0
+git push ssh://adison.xu@172.24.61.94:29418/mtk6582/packages/apps/Settings HEAD:refs/for/hero2-share-rio5
+
+mtk6595/mediatek
+git push ssh://adison.xu@172.24.61.94:29418/mtk6595/frameworks HEAD:refs/for/mtk6595-kk-v1.0-dintmtk6595/packages/apps/Bluetooth
+
+git push ssh://adison.xu@172.24.61.94:29418/mtk6592/packages/apps/Settings HEAD:refs/for/mt8392_android4.4_global_v1.0
+
+git push ssh://adison.xu@172.24.61.94:29418/mtk6592/frameworks HEAD:refs/for/mt8392_android4.4_fsr_v1.0
+git push ssh://adison.xu@172.24.61.94:29418/mtk6592/packages/apps/Settings HEAD:refs/for/mt8392_android4.4_fsr_v1.0
+
+git push ssh://adison.xu@172.24.61.94:29418/mtk6592/frameworks HEAD:refs/for/mt6592-android4.4-fsr-v1.0
+git push ssh://adison.xu@172.24.61.94:29418/mtk6582/packages/apps/Settings HEAD:refs/for/mt6592-android4.4-fsr-v1.0
+
+git push ssh://adison.xu@172.24.61.94:29418/mtk6582/packages/providers/MediaProvider HEAD:refs/for/hero2-share-rio5
+git push ssh://adison.xu@172.24.61.94:29418/mtk6582/packages/providers/MediaProvider HEAD:refs/for/mt6592-android4.4-fsr-v1.0
+
+git push ssh://adison.xu@172.24.61.94:29418/mtk6592/packages/providers/MediaProvider HEAD:refs/for/mt8392_android4.4_global_v1.0
+git push ssh://adison.xu@172.24.61.94:29418/mtk6582/packages/providers/MediaProvider HEAD:refs/for/mtk82_92-kk-v1.0-dint
+
+git commit
+git push ssh://adison.xu@172.24.61.94:29418/quicl/platform/packages/apps/Settings.git HEAD:refs/for/l8916_sh_bsp_dev2
+
+git push ssh://adison.xu@172.24.61.94:29418/quicl/platform/frameworks/base.git HEAD:refs/for/l8916_sh_bsp_dev2
+
+
+
+
+
