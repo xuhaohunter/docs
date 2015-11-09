@@ -87,8 +87,15 @@ git branch -a
 git checkout YULOG
 git checkout -b 
 git branch -D
-git cherrypick 
+git cherry-pick
 git reset HEAD^
+
+
+git pull --rebase 把拉下来的文件合入本地代码
+git reset 32ee99ea15d85de0d7b1519cb23fe3cb334a08bb  重新生成commit id
+git reset --hard 32ee99ea15d85de0d7b1519cb23fe3cb334a08bb 连本地文件都修改了
+git clean -fdx
+git add -A
 
 git add
 git commit -am "123"
@@ -111,13 +118,13 @@ sudo adduser kuein usbfs
 
 上传dump的技巧：
 dump问题需要elf文件见modem_release，vmlinux见刷机软件。
-\\192.168.10.175\modem_release
+\\192.168.10.233\modem_release
 titan对应的modem:X26_titan
 
 空指针crash的信号为SIGSEGV, 区别于SIGPIPE
 
 1 elf文件放在dump下
-2 dump文件放在usbdump/coredump下面
+2 dump文件放在usbdump/coredump下面，是bin文件不是解压后的文件夹
 3 vmlinux放在usbdump下面
 4 parser8916, dump_log.bat
 
@@ -128,11 +135,16 @@ sudo apt-get install gnome-panel
 excel使用技巧：
 1 点框格式刷
 
+toolbox:
+相关system/core/toolbox
+
 
 git hub:
 git clone https://github.com/xuhaohunter/docs.git
 git commit -am "辉烨技术文档"
 git push/git push origin master
+github账户密码：xuhaohunter
+密码:Xh131970
 
 git clone https://github.com/liyatanggithub/liyatangvim.git
 替换.vimrc和.vim文件夹
@@ -147,7 +159,7 @@ patch提交规范：
 1 omnipeek软件
 2 支持抓空口包的无线网卡
 
-问题根源：重复打印无用log，影响系统性能
+问题根源：	0075481
 解决方案：删除无用log
 测试建议：无
 波及影响：无
@@ -309,16 +321,29 @@ csmd/ca冲突避免机制：
 另外前面对比机是海思平台的，需要提供下高通平台的对比机log。
 截图不能反映遮挡的情况，最好提供视频，或者多截几张图。
 
-问题根源：mtp显示的userdata分区的大小，不是总容量，和titan项目保持一致，后续增大userdata分区的大小
-解决方案：增大userdata分区大小
+问题根源：测试时缺少硬件漫游环境，需要软件模拟BT HFP设备漫游环境
+解决方案：增加软件模拟漫游
 测试建议：无
 波及影响：无
 研发测试结果：pass
 
-//0068239 xuhao:disable BLE privacy features to fix Casio watch dono't show bt pairing dialog
+//0076213 xuhao:qualcomm patch fix BT PTS HFP test case related roaming
+0076213: fix BT PTS HFP test case related roaming failed
 
-8G SD卡显示7.4G是正常的。
-内部存储电脑上显示12.3G是用户容量，手机上显示16G是总容量，和其他项目保持一致，也是正确的。
+11-03 17:02:38.677 I/dhcpcd  (27677): version 5.5.6 starting
+11-03 17:02:38.910 I/dhcpcd  (27677): wlan0: acknowledged 192.168.43.80 from 192.168.43.1
+11-03 17:02:38.998 I/dhcpcd  (27677): wlan0: leased 192.168.43.80 for 43200 seconds
+11-03 17:02:39.292 E/WifiStateMachine( 2253): WifiStateMachine DHCP successful
+
+新版本高通引入的QoS调节机制，会根据实际需要不断调整总线带宽。
+测试时使用的是测试模式，crash会重启进dump，在用户模式下不会重启，只会单模块重启。
+
+在wcnss占用较大带宽及wcnss和Camera等其他模块竞争带宽时容易发生wcnss crash。
+未修改前wcnss获取总线带宽时是固定优先级，修改后wcnss在50Mbps带宽下具有更高的优先级。解决总线延迟导致crash的问题。
+更详细见附件高通说明文档。
+
+
+
 
 
 
