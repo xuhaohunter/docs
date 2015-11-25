@@ -6,7 +6,7 @@ set rtp+=~/.vim/bundle/vundle/
 call vundle#begin()
 call vundle#rc()
 
-Bundle 'liyatanggithub/vundle'
+Bundle 'gmarik/vundle'
 Bundle 'genutils'
 Bundle 'lookupfile'
 Bundle 'supertab'
@@ -14,6 +14,14 @@ Bundle 'taglist.vim'
 Bundle 'The-NERD-tree'
 Bundle 'omnicppcomplete'
 Bundle 'CmdlineComplete'
+Plugin 'asins/vimcdoc'
+Plugin 'nathanaelkane/vim-indent-guides'
+Plugin 'dyng/ctrlsf.vim'    "需要安装2.0以上ack,可使用如下命令安装到环境变量
+                            "curl http://beyondgrep.com/ack-2.14-single-file > ~/.bin/ack && chmod 0755 !#:3
+Plugin 'scrooloose/nerdcommenter'
+Plugin 'easymotion/vim-easymotion'
+Plugin 'godlygeek/tabular'
+Plugin 'vim-scripts/Visual-Mark'
 
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -25,17 +33,21 @@ filetype plugin indent on    " required
 "Vim基本设置
 "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 set nocompatible    "去除vim一致性模式，避免以前版本的一些bug和局限
-set ruler           "显示当前光标的行列信息
 set nu              "显示行号
 "set nowrap         "指定不折行。如果一行太长,超过屏幕宽度,则向右边延伸到屏幕外面
-set scrolloff=7     "在上下移动光标时，光标的上方或下方至少会保留显示的行数
+set scrolloff=100   "在上下移动光标时，光标的上方或下方至少会保留显示的行数
 syntax on           "语法高亮
 "set autochdir      "自动设置当前目录为正在编辑的目录
 set nocp            "不兼容vi
 set whichwrap=h,l,<,>
                     "左右移动光标到行首尾时自动换行
 set showcmd         "显示基本模式输入的命令
+set showmode        "显示当前模式
 filetype on         "自动识别文件类型
+"++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+"状态栏设置
+set ruler           "显示当前光标的行列信息
+set laststatus=2    "总显示最后一个窗口的状态
 "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 "搜索相关设置
 set wrapscan        "搜索过程在文件内部循环进行（默认）
@@ -72,7 +84,7 @@ inoremap { {<CR>}<ESC>k$a<CR>
 inoremap < <><ESC>i
 inoremap ' ''<ESC>i
 inoremap " ""<ESC>i
-inoremap / //<ESC>a
+"inoremap / //<ESC>a
 "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 "括号设置
 set showmatch       "设置匹配模式，显示括号配对情况
@@ -92,24 +104,28 @@ autocmd BufReadPost * :call StripTrailingWhite()
 "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 "折叠设置
 set foldenable
-set foldmethod=syntax
+set foldmethod=indent
 set foldlevelstart=99
                     "打开文件是默认不折叠代码
 nnoremap <space> @=((foldclosed(line('.')) < 0) ? 'zc' : 'zo')<CR>
                     "绑定空格键来开关折叠
 "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+"主题设置
+colorscheme default
+"++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 "行／列线设置
 set cursorline      "行线设置
-set cursorcolumn    "列线设置
-hi CursorLine  cterm=NONE   ctermbg=cyan ctermfg=white
-hi CursorColumn cterm=NONE ctermbg=cyan ctermfg=white
+"set cursorcolumn    "列线设置
+hi CursorLine  cterm=NONE   ctermbg=darkred ctermfg=white
+"hi CursorColumn cterm=NONE ctermbg=cyan ctermfg=white
                     "颜色设置，ctermbg为背景色，ctermfg为前景色
 "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-"在输入模式下的光标移动
+"在输入模式下的光标移动，删除字符
 inoremap <C-h> <Left>
 inoremap <C-j> <Down>
 inoremap <C-k> <Up>
 inoremap <C-l> <Right>
+inoremap <C-d> <Del>
 "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 "卷动绑定属性绑定快捷键，所有设置了卷动绑定属性的窗口将一起卷动
 map <leader>b :set scrollbind<CR>
@@ -153,15 +169,15 @@ if has("cscope")
     "   'f'   file:   open the filename under cursor
     "   'i'   includes: find files that include the filename under cursor
     "   'd'   called: find functions that function under cursor calls
-        nmap <C-\> :cs find s <C-R>=expand("<cword>")<CR><CR>
-    "nmap <C-\>s :cs find s <C-R>=expand("<cword>")<CR><CR>
-    "nmap <C-\>g :cs find g <C-R>=expand("<cword>")<CR><CR>
-    "nmap <C-\>c :cs find c <C-R>=expand("<cword>")<CR><CR>
-    "nmap <C-\>t :cs find t <C-R>=expand("<cword>")<CR><CR>
-    "nmap <C-\>e :cs find e <C-R>=expand("<cword>")<CR><CR>
-    "nmap <C-\>f :cs find f <C-R>=expand("<cfile>")<CR><CR>
-    "nmap <C-\>i :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
-    "nmap <C-\>d :cs find d <C-R>=expand("<cword>")<CR><CR>
+    nmap <C-\> :cs find s <C-R>=expand("<cword>")<CR><CR>
+    nmap <C-\>s :cs find s <C-R>=expand("<cword>")<CR><CR>
+    nmap <C-\>g :cs find g <C-R>=expand("<cword>")<CR><CR>
+    nmap <C-\>c :cs find c <C-R>=expand("<cword>")<CR><CR>
+    nmap <C-\>t :cs find t <C-R>=expand("<cword>")<CR><CR>
+    nmap <C-\>e :cs find e <C-R>=expand("<cword>")<CR><CR>
+    nmap <C-\>f :cs find f <C-R>=expand("<cfile>")<CR><CR>
+    nmap <C-\>i :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
+    nmap <C-\>d :cs find d <C-R>=expand("<cword>")<CR><CR>
 endif
 "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 "lookupfile设置
@@ -175,14 +191,14 @@ let g:LookupFile_AllowNewFiles = 0              "不允许创建不存在的文�
 function! LookupFile_IgnoreCaseFunc(pattern)
 	let _tags = &tags
 	try
-		let &tags = eval(g:LookupFile_TagExpr)
-		let newpattern = '\c' . a:pattern
-		let tags = taglist(newpattern)
+	    let &tags = eval(g:LookupFile_TagExpr)
+	    let newpattern = '\c' . a:pattern
+	    let tags = taglist(newpattern)
 	catch
-		echohl ErrorMsg | echo "Exception: " . v:exception | echohl NONE
-		return ""
+	    echohl ErrorMsg | echo "Exception: " . v:exception | echohl NONE
+	    return ""
 	finally
-		let &tags = _tags
+	    let &tags = _tags
 	endtry
 
 	"Show the matches for what is typed so far.
@@ -215,3 +231,33 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") &&b:NERDTreeT
                                         "退出vim时如果打开NerdTree，一起关闭窗口
 "autocmd vimenter * NERDTree
                                         "打开vim时自动打开NERDTree
+"++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+"中文帮助文档
+let helptags="~/.vim/bundle/vimcdoc/doc"
+set helplang=cn
+"++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+"vim-indent-guides设置
+let g:indent_guides_enable_on_vim_startup=1     "随 vim 自启动
+let g:indent_guides_start_level=2               "从第二层开始可视化显示缩进
+let g:indent_guides_guide_size=1                "色块宽度
+let g:indent_guides_auto_colors = 0             "颜色设置
+autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=red   ctermbg=3
+autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=green ctermbg=4
+map <leader>lk :IndentGuidesToggle<CR>
+                                                "快捷键打开关闭
+"++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+"ctrlsf设置
+map <leader>f :CtrlSF<CR>
+                                        "快捷键打开关闭
+let g:ctrlsf_position = 'bottom'
+let g:ctrlsf_mapping = {
+    \ "next": "n",
+    \ "prev": "N",
+    \ "openb": "",
+    \ }
+"let g:ctrlsf_selected_line_hl = 'op'
+let g:ctrlsf_winsize = '40%'
+"++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+"tabular设置
+map <leader>bb :Tabularize /=<CR>
+map <leader>bn :Tabularize /
