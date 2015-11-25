@@ -1,0 +1,4 @@
+使用apt-get或yum安装ctags和cscope
+将.vimrc和.vim复制到~
+
+此工程还包括了.screenrc文件，此文件为screen的配置文件，直接copy到~即可使用

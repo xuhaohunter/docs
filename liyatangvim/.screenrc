@@ -1,0 +1,21 @@
+#启动时不显示欢迎屏幕
+startup_message off
+#putty 退出vim恢复之前状态
+altscreen on
+#关闭tab闪屏
+vbell off
+#底部状态栏
+caption always "%{=b}%{b}%{C}%{-} %+0=%-w%8L>*%n%{-}%+w%-014< %-45=%{b y}[F9:scr F10:del F11:pr F12:ne] %-012=%{b y}%m-%d %c"
+#顶部状态栏,全屏时不可见
+#hardstatus string '[ %{G}%c:%s %{g}][%= %{= kw}%?%-Lw%?%{Y}%n*%f%t %{K}%?%+Lw%?%= %{kG}][F9:scr F10:del F11:pr F12:ne][%Y/%m/%d]'
+#设置一个大的buffer
+defscrollback 409600
+#断线的时候自动detach
+autodetach on
+#绑定快捷键
+bindkey -k k8 copy
+bindkey -k k9 screen
+bindkey -k k; detach
+bindkey -k F1 prev
+bindkey -k F2 next
+#官网https://wiki.archlinux.org/index.php/GNU_Screen
