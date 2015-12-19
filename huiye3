@@ -33,6 +33,9 @@ sudo ./out/host/linux-x86/bin/adb logcat
 2 cat denied_log.txt | audit2allow
 3 device/qcom/sepolicy/common添加对应的te
 
+fastboot刷modem
+fastboot flash modem non-hlos.bin
+
 wifi/bt tester暗码：
 *#*#8375#*#*
 选择“Wifi and BT"-- "Wifi"
@@ -166,6 +169,9 @@ github账户密码：xuhaohunter
 git clone https://github.com/liyatanggithub/liyatangvim.git
 替换.vimrc和.vim文件夹
 
+删除不关注的项目：
+Settings/Delete this repository
+
 patch提交规范：
 //0078144 xuhao:add slow sdcard detect
 /* 0068802 zhiyu:support SD which have no MBR sector */
@@ -186,6 +192,31 @@ patch提交规范：
   vosTraceEnableHDD=255
   vosTraceEnableSME=255
   vosTraceEnablePE=255 
+wifi p2p log:
+修改p2p_supplicant.conf，可以只抓1信道的log
+  p2p_listen_reg_class=81
+  p2p_listen_channel=1
+  p2p_oper_reg_class=81
+  p2p_oper_channel=1
+  gDebugP2pRemainOnChannel=1
+
+修改wifi MAC地址：
+使用AXDM中的QCN工具，写到moden的NV里面，NV号是04678
+QXDM --> nv browser --> 04678    WLAN MAC Address    wlan_mac_address    WLAN
+按下空格，只能设置数字 （QMI 接口不支持）
+
+扫描不到
+修改/data/misc/wifi/WCNSS_qcom_cfg.ini
+gPassiveMaxChannelTime=120
+gPassiveMinChannelTime=60
+gActiveMaxChannelTime=80
+gActiveMinChannelTime=40
+
+在抓kernle log前，请运行下面的命令。
+iwpriv wlan0 setwlandbg 5 9 1
+iwpriv wlan0 setwlandbg 6 9 1
+iwpriv wlan0 setwlandbg 7 9 1
+iwpriv wlan0 setwlandbg 8 9 1
 
 问题根源：	0075481
 解决方案：删除无用log
@@ -349,32 +380,100 @@ csmd/ca冲突避免机制：
 另外前面对比机是海思平台的，需要提供下高通平台的对比机log。
 截图不能反映遮挡的情况，最好提供视频，或者多截几张图。
 
-问题根源：测试时缺少硬件漫游环境，需要软件模拟BT HFP设备漫游环境
-解决方案：增加软件模拟漫游
+问题根源：问题机SD卡卡座有点偏，SD卡角上有磨损，导致有问题。拆开后壳斜着插卡，测试10次没有问题。相关图片见附件。
+解决方案：无
 测试建议：无
 波及影响：无
-研发测试结果：pass
+研发测试结果：无
 
-//0076213 xuhao:qualcomm patch fix BT PTS HFP test case related roaming
-0076213: fix BT PTS HFP test case related roaming failed
+10-09 07:51:36.483 D/wpa_supplicant(11595): p2p0: Control interface command 'P2P_FIND 120'
+10-09 07:52:46.155 D/wpa_supplicant(11595): P2P: Starting search
+10-09 07:52:46.163 D/wpa_supplicant(11595): p2p0: Event SCAN_STARTED (49) received
+10-09 07:52:46.234 D/wpa_supplicant(11595): p2p0: Event SCAN_RESULTS (3) received
+10-09 07:52:46.235 D/wpa_supplicant(11595): nl80211: Received scan results (14 BSSes)
+10-09 07:52:47.685 I/wpa_supplicant(11595): P2P-DEVICE-FOUND ca:51:95:28:0d:54 p2p_dev_addr=ca:51:95:28:0d:54 pri_dev_type=10-0050F204-5 name='HUAWEI TIT-CL00_fbc3' config_methods=0x188 dev_capab=0x25 group_capab=0x0 vendor_elems=1
+10-09 07:52:50.828 D/wpa_supplicant(11595): p2p0: Control interface command 'P2P_PROV_DISC ca:51:95:28:0d:54 pbc'
+10-09 07:52:51.877 I/wpa_supplicant(11595): P2P-PROV-DISC-PBC-RESP ca:51:95:28:0d:54
+10-09 07:52:51.880 D/wpa_supplicant(11595): p2p0: Control interface command 'P2P_CONNECT ca:51:95:28:0d:54 pbc persistent go_intent=6 '
+10-09 07:52:52.306 D/wpa_supplicant(11595): P2P: Received GO Negotiation Response from ca:51:95:28:0d:54 (freq=2412)
+10-09 07:52:54.135 I/wpa_supplicant(11595): P2P-GO-NEG-SUCCESS role=GO freq=2437 ht40=0 peer_dev=ca:51:95:28:0d:54 peer_iface=ca:51:95:28:0d:54 wps_method=PBC
+10-09 07:52:55.198 I/wpa_supplicant(11595): P2P-GROUP-FORMATION-SUCCESS
+10-09 07:52:55.214 I/wpa_supplicant(11595): P2P-GROUP-STARTED p2p0 GO ssid="DIRECT-gA-HUAWEI TIT-CL00_feec" freq=2437 go_dev_addr=7e:b1:5d:85:cd:b2 [PERSISTENT]
+10-09 07:52:55.230 I/wpa_supplicant(11595): p2p0: WPS-SUCCESS
+10-09 07:52:55.556 I/wpa_supplicant(11595): p2p0: AP-STA-CONNECTED ca:51:95:28:0d:54 p2p_dev_addr=ca:51:95:28:0d:54
+10-09 07:53:34.685 D/wpa_supplicant(11595): p2p0: Control interface command 'P2P_GROUP_REMOVE p2p0'
+10-09 07:53:34.685 I/wpa_supplicant(11595): P2P-GROUP-REMOVED p2p0 GO reason=REQUESTED
 
-11-03 17:02:38.677 I/dhcpcd  (27677): version 5.5.6 starting
-11-03 17:02:38.910 I/dhcpcd  (27677): wlan0: acknowledged 192.168.43.80 from 192.168.43.1
-11-03 17:02:38.998 I/dhcpcd  (27677): wlan0: leased 192.168.43.80 for 43200 seconds
-11-03 17:02:39.292 E/WifiStateMachine( 2253): WifiStateMachine DHCP successful
+1 Event流程
+//寻找设备
+10-09 07:52:48.223 D/wpa_supplicant(11595): p2p0: Event SCAN_STARTED (49) received
+10-09 07:52:48.488 D/wpa_supplicant(11595): p2p0: Event SCAN_RESULTS (3) received
+10-09 07:52:48.489 I/wpa_supplicant(11595): P2P-DEVICE-FOUND ca:51:95:28:0d:54 p2p_dev_addr=ca:51:95:28:0d:54 pri_dev_type=10-0050F204-5 name='HUAWEI TIT-CL00_fbc3' config_methods=0x188 dev_capab=0x25 group_capab=0x0 vendor_elems=1
+10-09 07:52:50.810 I/wpa_supplicant(11595): P2P-FIND-STOPPED
+//协商GO
+10-09 07:52:51.877 I/wpa_supplicant(11595): P2P-PROV-DISC-PBC-RESP ca:51:95:28:0d:54
+10-09 07:52:54.135 I/wpa_supplicant(11595): P2P-GO-NEG-SUCCESS role=GO freq=2437 ht40=0 peer_dev=ca:51:95:28:0d:54 peer_iface=ca:51:95:28:0d:54 wps_method=PBC
+//EPA-WSC连接
+10-09 07:52:54.935 I/wpa_supplicant(11595): p2p0: CTRL-EVENT-EAP-STARTED ca:51:95:28:0d:54
+10-09 07:52:55.197 I/wpa_supplicant(11595): p2p0: WPS-REG-SUCCESS ca:51:95:28:0d:54 322f78d2-f066-583a-ab25-f3cfd4459f94
+10-09 07:52:55.198 I/wpa_supplicant(11595): P2P-GROUP-FORMATION-SUCCESS
+10-09 07:52:55.214 I/wpa_supplicant(11595): P2P-GROUP-STARTED p2p0 GO ssid="DIRECT-gA-HUAWEI TIT-CL00_feec" freq=2437 go_dev_addr=7e:b1:5d:85:cd:b2 [PERSISTENT]
+10-09 07:52:55.230 I/wpa_supplicant(11595): p2p0: WPS-SUCCESS
+10-09 07:52:55.230 I/wpa_supplicant(11595): p2p0: CTRL-EVENT-EAP-FAILURE ca:51:95:28:0d:54
+10-09 07:52:55.556 I/wpa_supplicant(11595): p2p0: AP-STA-CONNECTED ca:51:95:28:0d:54 p2p_dev_addr=ca:51:95:28:0d:54
+//断开连接
+10-09 07:53:34.685 I/wpa_supplicant(11595): P2P-GROUP-REMOVED p2p0 GO reason=REQUESTED
 
-<3>[   96.884444] card->sd_bus_speed = 0
+2 包流程
+//Provision Discovery
+10-09 07:52:50.430 D/wpa_supplicant(11595): WPS: Building WPS IE for Probe Request
+10-09 07:52:51.842 D/wpa_supplicant(11595): P2P: Send pending Provision Discovery Request to ca:51:95:28:0d:54 (config methods 0x80)
+10-09 07:52:51.858 D/wpa_supplicant(11595): P2P: Provision Discovery Request TX callback: success=1
+10-09 07:52:51.869 D/wpa_supplicant(11595): P2P: Received Provision Discovery Response from ca:51:95:28:0d:54 with config methods 0x80
+//协商GO
+10-09 07:52:52.266 D/wpa_supplicant(11595): P2P: Sending GO Negotiation Request
+10-09 07:52:52.283 D/wpa_supplicant(11595): P2P: GO Negotiation Request TX callback: success=1
+10-09 07:52:52.306 D/wpa_supplicant(11595): P2P: Received GO Negotiation Response from ca:51:95:28:0d:54 (freq=2412)
+10-09 07:52:52.306 D/wpa_supplicant(11595): P2P: * Device Info: addr ca:51:95:28:0d:54 primary device type 10-0050F204-5 device name 'HUAWEI TIT-CL00_fbc3' config methods 0x188
+10-09 07:52:52.306 D/wpa_supplicant(11595): P2P: GO Negotiation rejected: status 1
+10-09 07:52:54.068 D/wpa_supplicant(11595): P2P: Received GO Negotiation Request from ca:51:95:28:0d:54(freq=2412)
+10-09 07:52:54.068 D/wpa_supplicant(11595): P2P: * Device Info: addr ca:51:95:28:0d:54 primary device type 10-0050F204-5 device name 'HUAWEI TIT-CL00_fbc3' config methods 0x80
+10-09 07:52:54.072 D/wpa_supplicant(11595): P2P: Sending GO Negotiation Response
+10-09 07:52:54.083 D/wpa_supplicant(11595): P2P: GO Negotiation Response TX callback: success=1
+10-09 07:52:54.083 D/wpa_supplicant(11595): P2P: Set timeout (state=CONNECT): 0.500000 sec
+10-09 07:52:54.093 D/wpa_supplicant(11595): P2P: Received GO Negotiation Confirm from ca:51:95:28:0d:54
+10-09 07:52:54.093 D/wpa_supplicant(11595): P2P: * Operating Channel: Country XX(0x04) Regulatory Class 81 Channel Number 6
+//WPS协商配置过程
+10-09 07:52:54.934 D/wpa_supplicant(11595): WPS: Building WPS IE for (Re)Association Response
+10-09 07:52:55.029 D/wpa_supplicant(11595): WPS: Received M1
+10-09 07:52:55.034 D/wpa_supplicant(11595): WPS: Building Message M2
+10-09 07:52:55.162 D/wpa_supplicant(11595): WPS: Received M3
+10-09 07:52:55.162 D/wpa_supplicant(11595): WPS: Building Message M4
+10-09 07:52:55.176 D/wpa_supplicant(11595): WPS: Received M5
+10-09 07:52:55.176 D/wpa_supplicant(11595): WPS: Building Message M6
+10-09 07:52:55.186 D/wpa_supplicant(11595): WPS: Received M7
+10-09 07:52:55.186 D/wpa_supplicant(11595): WPS: Building Message M8
+10-09 07:52:55.197 D/wpa_supplicant(11595): WPS: Received WSC_Done
+10-09 07:52:55.230 D/wpa_supplicant(11595): EAP: Building EAP-Failure (id=108)
 
-<3>[   91.022145] card->sd_bus_speed = 3
 
-speed_class = UNSTUFF_BITS(ssr, 440 - 384, 8);
-        pr_err("%s: enter sd.c read speed_class = %d.\n", mmc_hostname(card->host), speed_class);
-        if (speed_class != -1 && speed_class < 4)
-                card->sdcard_speed = 1;
-        else if (speed_class == 4)
-                card->sdcard_speed = 3;
-
-
+3 命令流程
+//删除群组
+10-09 07:51:21.733 D/wpa_supplicant(11595): p2p0: Control interface command 'REMOVE_NETWORK 1'
+//扫描命令
+10-09 07:52:48.190 D/wpa_supplicant(11595): p2p0: Control interface command 'P2P_STOP_FIND'
+10-09 07:52:48.212 D/wpa_supplicant(11595): p2p0: Control interface command 'P2P_FLUSH'
+10-09 07:52:48.214 D/wpa_supplicant(11595): p2p0: Control interface command 'P2P_FIND 120'
+//发起连接
+10-09 07:52:50.828 D/wpa_supplicant(11595): p2p0: Control interface command 'P2P_PROV_DISC ca:51:95:28:0d:54 pbc'
+10-09 07:52:51.880 D/wpa_supplicant(11595): p2p0: Control interface command 'P2P_CONNECT ca:51:95:28:0d:54 pbc persistent go_intent=6 '
+//对方接受连接
+10-09 07:52:55.242 D/wpa_supplicant(11595): p2p0: Control interface command 'LIST_NETWORKS'
+10-09 07:52:55.243 D/wpa_supplicant(11595): p2p0: Control interface command 'GET_NETWORK 1 mode'
+//断开连接
+10-09 07:53:34.685 D/wpa_supplicant(11595): p2p0: Control interface command 'P2P_GROUP_REMOVE p2p0'
+//取消邀请
+10-18 06:09:35.507 D/wpa_supplicant(31207): p2p0: Control interface command 'P2P_CANCEL'
 
 
 
