@@ -210,6 +210,22 @@ wifi p2p log:
 
 adb shell echo c > /proc/sysrq-trigger
 
+qxdm log中没有有效信息，正确的log打开后可以看到wlan等关键字，抓完log后麻烦检查下。
+如果客户抓不了qxdm log，可以尝试抓adb log + kernel log + dump
+1 抓取adb log
+  a 打开设置->开发者选项->启用WLAN详细日志记录功能
+  b 打开/关闭wifi, 复现问题，确保log中出现了一次开关wifi 
+2 刷版本对应的eng boot，抓kernel log
+  a 修改手机中的/data/misc/wifi/WCNSS_qcom_cfg.ini文件，在最后添加
+    vosTraceEnableSME=255
+    vosTraceEnableHDD=255
+    vosTraceEnablePE=255
+    vosTraceEnableWDA=255
+  b 重启后抓取kernel log，命令为
+  adb shell cat /proc/kmsg > kernel.log
+3 刷版本对应的eng boot，在问题发生是使用以下命令，获取dump，确保插了外置SD卡:
+  adb shell echo c > /proc/sysrq-trigger
+
 修改wifi MAC地址：
 使用AXDM中的QCN工具，写到moden的NV里面，NV号是04678
 QXDM --> nv browser --> 04678    WLAN MAC Address    wlan_mac_address    WLAN
@@ -232,6 +248,14 @@ iwpriv wlan0 setwlandbg 5 9 1
 iwpriv wlan0 setwlandbg 6 9 1
 iwpriv wlan0 setwlandbg 7 9 1
 iwpriv wlan0 setwlandbg 8 9 1
+
+尝试关闭wifi和到干净的环境中，此问题是否还存在。如
+抓蓝牙的log:
+(1) logcat log
+  将/etc/bluetooth/bt_stack.conf中的TRC_xxx改为6，BtSnoopLogOutput=true和BtSnoopFileName=/sdcard/btsnoop_hci.cfa
+  使用logcat -v threadtime抓取adb log.
+(2) btsnoop log
+  校对本机时间，抓取btsnoop log。注意开关wifi会清空btsnoop log
 
 问题根源：	0075481
 解决方案：删除无用log
@@ -402,5 +426,11 @@ log中没有看到有效信息。需要测试复现下。
 2.4 Device Discovery and Enumeration
 MTP does not attempt to define how devices are discovered or identified as supporting MTP. This should be defined in a manner consistent with the underlying transport, and may be performed in more than one way for a given transport.
 
+
+从log上来看确实没有扫到周围的设备。 
+01-05 10:23:59.389 V/BluetoothDiscoveryReceiver(15094): Received: android.bluetooth.adapter.action.DISCOVERY_STARTED
+01-05 10:24:11.987 V/BluetoothDiscoveryReceiver(15094): Received: android.bluetooth.adapter.action.DISCOVERY_FINISHED
+
+尝试关闭wifi和到干净的环境中，此问题是否还存在，则抓取adb log和btsnoop log。
 
 
