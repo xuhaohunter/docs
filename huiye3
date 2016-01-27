@@ -1,0 +1,470 @@
+拉代码命令：
+repo init 8916-hw;repo sync -j8;repo start local --all;source build/envsetup.sh;choosecombo 1 11 3 1;make update-api;make -j20
+repo init 8909-1136;repo sync -j8;repo start local --all;source build/envsetup.sh;choosecombo 1 4 3;make update-api;make -j20//海尔
+repo init 8916-ap;repo sync -j8;repo start local --all;source build/envsetup.sh;choosecombo 1 msm8916_x39_p590l 3;make update-api;make -j20
+repo init 8x09-app;repo sync -j8;repo start local --all;source build/envsetup.sh;choosecombo 1 15 3;make update-api;make -j20
+repo init 8952-ap;repo sync -j8;repo start local --all;source build/envsetup.sh;choosecombo 1 msm8952_x40_p668l 13;make update-api;make -j20
+repo init 8909-5.1;repo sync -j8;repo start local --all;source build/envsetup.sh;choosecombo 1 msm8909_x29_650l 3;make update-api;make -j20//X29
+repo init 8952-a2;repo sync -j8;repo start local --all;source build/envsetup.sh;choosecombo 1 msm8909_x29_650l 3;make update-api;make -j20
+ 
+WCN3615
+ 
+logkit命令；
+3*7435
+ 
+单编出现make: *** No rule to make target错误，是没有编译环境。
+ 
+bluetooth music问题，提case选择A2DP as PA3。
+ 
+SD卡相关问题
+BSP/HLOS         
+Problem Area 2    Drivers - Peripheral         
+Problem Area 3    Storage (SDCC/MMC/SDIO/SD/eMMC/UFS/SATA) - AP
+ 
+adb waiting for device问题解决：
+sudo ./out/host/linux-x86/bin/adb kill-server
+sudo ./out/host/linux-x86/bin/adb logcat
+ 
+解决selinux denied问题：
+1 adb shell cat /proc/kmsg
+2 cat denied_log.txt | audit2allow
+3 device/qcom/sepolicy/common添加对应的te
+ 
+fastboot刷modem
+fastboot flash modem non-hlos.bin
+ 
+wifi/bt tester暗码：
+*#*#8375#*#*
+选择“Wifi and BT"-- "Wifi"
+ 
+bt版本：
+Bluetooth Core Specification
+ 
+coolpad 测试暗码：
+#*20110606#
+*#96463#*
+ 
+邮箱地址: xuhao@hymost.com 邮箱初始密码: 123456
+ 
+bugtracker:
+http://192.168.10.180/bugtracker/view_all_bug_page.php?page_number=1
+ 
+OA网址：
+http://oa.hymost.com:8888
+帐号：h1745  密码：123456
+ 
+涉及到ivim:
+1 git clone http://github.com/liyatanggithub/liyatangvim.git
+  cp .vimrc ~
+  cp -r .vim ~
+2 sudo apt-get install ctags cscope
+  vim --version | grep cscope
+  sudo apt-get autoremove vim
+3 :LP键tag
+  F5搜索
+  :KK/:LL 类似sourceinsight
+  ;lk 去掉对齐
+  CTRL+PageUp/PageDown 切换终端
+4 切换多个文件
+  jobs fg
+  VS VP
+5 复制粘贴
+  中键
+ 
+AndroidBoard.mk
+KERNEL_DEFCONFIG := msm8916_titan-perf_defconfig
+ 
+设置data分区大小：
+adb shell cat /proc/partitions
+选择合适的值除以1024
+ 259       10   11466735 mmcblk0p42
+ 
+9.19vim快捷键：
+;ll  右边显示代码结构
+;kk  左边显示目录结构
+;lp  vim下打tag，F5搜索
+insert模式下 alt + hjkl来上下左右使用
+ 
+ 
+1 QXDM帐号
+    ZTE
+    walshcode
+    1071
+2 QXDM文档见附件，抓log前请先导入配置文件
+ 
+查找并替换
+find . -name "*.jsp" -print | xargs grep "alert"
+ 
+sed -i "s/pr_info/pr_err/g" `grep pr_info -rl ./`
+sed -i "s/pr_debug/pr_err/g" `grep pr_debug -rl ./`
+ 
+下载SD卡文档的目录：
+http://www.sdcard.org/downloads/pls/simplified_specs/
+ 
+tar和split
+ 
+adb logcat -v time | tee slow_sdcard3.log | grep -E "MountService"
+ 
+git命令：
+git branch -a
+git checkout YULOG
+git checkout -b
+git branch -D
+git cherry-pick
+git reset HEAD^
+ 
+ 
+git pull --rebase 把拉下来的文件合入本地代码
+git reset 32ee99ea15d85de0d7b1519cb23fe3cb334a08bb  重新生成commit id
+git reset --hard 32ee99ea15d85de0d7b1519cb23fe3cb334a08bb 连本地文件都修改了
+git clean -fdx
+git add -A
+ 
+git add
+git commit -am "123"
+git format-patch -p1
+git diff > 123.patch
+cp 0001-comment-Wifi-Direct-MUT-crash-after-disconnect-wifi-.patch frameworks/opt/net/wifi
+patch -p1 < 123.patch或者git apply 123.patch
+ 
+cd .repo/projects/external/bluetooth/
+rm bluedroid.git/ -rf
+repo start local external/bluetooth/bluedroid/
+ 
+ubuntu virtualbox识别USB
+sudo adduser 你的用户名 vboxusers
+cat /etc/group | grep vboxuser
+将xuhao加入sudo目录：
+sudo groupadd usbfs
+sudo adduser kuein vboxusers
+sudo adduser kuein usbfs
+
+virtual全屏需要安装Devices->GuestAdditions
+出现VERR_PDM_MEDIA_PACKED错误时手动弹出光驱
+ 
+上传dump的技巧：
+dump问题需要elf文件见modem_release，vmlinux见刷机软件。
+\\192.168.10.233\modem_release
+titan对应的modem:X26_titan
+ 
+unstripped ko路径：
+mm vendor\qcom\opensource\wlan\prima或者make pronto_wlan.ko -j6
+out\target\product\msm8xxx\obj\vendor\qcom\opensource\wlan\prima\pronto_wlan.ko. 大于30M.
+ 
+空指针crash的信号为SIGSEGV, 区别于SIGPIPE
+ 
+1 elf文件放在dump下
+2 dump文件放在usbdump/coredump下面，是bin文件不是解压后的文件夹
+3 vmlinux放在usbdump下面
+4 parser8916, dump_log.bat
+ 
+ubuntu返回经典主题：
+sudo apt-get install gnome-session-fallback
+sudo apt-get install gnome-panel
+ 
+excel使用技巧：
+1 点框格式刷
+ 
+toolbox:
+相关system/core/toolbox
+ 
+ 
+git hub:
+git clone https://github.com/xuhaohunter/docs.git
+git commit -am "辉烨技术文档"
+git push/git push origin master
+github账户密码：xuhaohunter
+密码:Xh131970
+ 
+git clone https://github.com/liyatanggithub/liyatangvim.git
+替换.vimrc和.vim文件夹
+ 
+删除不关注的项目：
+Settings/Delete this repository
+ 
+patch提交规范：
+//0078144 xuhao:add slow sdcard detect
+/* 0068802 zhiyu:support SD which have no MBR sector */
+0067864: fix connect bmw carkit qq no sound
+//0072328 xuhao:optimize wifi log
+ 
+抓空口包的方法：
+1 omnipeek软件
+2 支持抓空口包的无线网卡
+ 
+抓sd卡相关log:
+1 打开CONFIG_MMC_DEBUG
+2 pr_debug和pr_info改为pr_err
+ 
+抓wifi相关log
+1 打开verbose log
+2 /data/misc/wifi/WCNSS_qcom_cfg.ini中打开
+  vosTraceEnableSME=255
+  vosTraceEnableHDD=255
+  vosTraceEnablePE=255
+  vosTraceEnableWDA=255
+  或者  
+  iwpriv wlan0 setwlandbg 5 9 1
+  iwpriv wlan0 setwlandbg 6 9 1
+  iwpriv wlan0 setwlandbg 7 9 1
+  iwpriv wlan0 setwlandbg 8 9 1
+wifi p2p log:
+修改p2p_supplicant.conf，可以只抓1信道的log
+  p2p_listen_reg_class=81
+  p2p_listen_channel=1
+  p2p_oper_reg_class=81
+  p2p_oper_channel=1
+  gDebugP2pRemainOnChannel=1
+ 
+手动产生dump:
+adb shell echo c > /proc/sysrq-trigger
+
+手动加载wlan驱动：
+adb shell insmod /system/lib/modules/wlan.ko
+
+翻墙软件Latern:
+https://github.com/comeforu2012/truth/wiki
+ 
+qxdm log中没有有效信息，正确的log打开后可以看到wlan等关键字，抓完log后麻烦检查下。
+如果客户抓不了qxdm log，可以尝试抓adb log + kernel log + dump
+1 抓取adb log
+  a 打开设置->开发者选项->启用WLAN详细日志记录功能
+  b 打开/关闭wifi, 复现问题，确保log中出现了一次开关wifi
+2 刷版本对应的eng boot，抓kernel log
+  a 修改手机中的/data/misc/wifi/WCNSS_qcom_cfg.ini文件，在最后添加
+    vosTraceEnableSME=255
+    vosTraceEnableHDD=255
+    vosTraceEnablePE=255
+    vosTraceEnableWDA=255
+  b 重启后抓取kernel log，命令为
+  adb shell cat /proc/kmsg > kernel.log
+3 刷版本对应的eng boot，在问题发生是使用以下命令，获取dump，确保插了外置SD卡:
+  adb shell echo c > /proc/sysrq-trigger
+ 
+修改wifi MAC地址：
+使用AXDM中的QCN工具，写到moden的NV里面，NV号是04678
+QXDM --> nv browser --> 04678    WLAN MAC Address    wlan_mac_address    WLAN
+按下空格，只能设置数字 （QMI 接口不支持）
+ 
+将手机固定在AP较多的信道，不过滤mac地址，抓取sniffer log
+  a 安装Omnipeek软件，网上搜索
+  b 购买Omnipeek软件支持的网卡，推荐思科AE3000，并安装Omnipeek官网上的驱动
+  c 点击Start Capture开始抓sniffer log
+
+DDR测试
+mtk平台我记得，mtk会提供一个工具，用这个工具连接手机，然后跑个mtk的脚本，就是不断播放一个3d动画，同时吧cpu开到100%重在，
+然后跑个一天，看死不死机，不死机，就通过mtk的工具读取ddr的一些参数，看这些参数是不是比较临界，
+如果太临界，驱动就修改ddr的寄存器设置，合入代码让工具读取的ddr参数能够达到中间值
+
+ 
+扫描不到
+修改/data/misc/wifi/WCNSS_qcom_cfg.ini
+gPassiveMaxChannelTime=120
+gPassiveMinChannelTime=60
+gActiveMaxChannelTime=80
+gActiveMinChannelTime=40
+ 
+尝试关闭wifi和到干净的环境中，此问题是否还存在。如
+抓蓝牙的log:
+(1) logcat log
+  将/etc/bluetooth/bt_stack.conf中的TRC_xxx改为6，BtSnoopLogOutput=true和BtSnoopFileName=/sdcard/btsnoop_hci.cfa
+  使用logcat -v threadtime抓取adb log.
+(2) btsnoop log
+  校对本机时间，抓取btsnoop log。注意开关wifi会清空btsnoop log
+ 
+问题根源：    0075481
+解决方案：删除无用log
+测试建议：无
+波及影响：无
+研发测试结果：通过
+ 
+/dev/block/bootdevice/by-name
+ 
+1 setenforce 0
+2 bt_stack.conf中的BtSnoopFileName=/data/btsnoop_hci.cfa
+确认可以生成btsnoop_hci.cfa文件
+ 
+external/bluetooth/bluedroid/bta/ag/bta_ag_cmd.c
+HFP AT cmd
+Received AT+BAC
+bta_ag_hfp_result
+CLIP type
+cind call
+send +BCS codec is
+ 
+build id:
+build ID：M8939AAAAANLYD2142.1
+ 
+虚拟机增加硬盘：
+1 Settings -> Storage -> Add Hard Disk
+2 管理 -> 磁盘管理 -> 选盘符
+ 
+bluedroid使用ALOGE:
+添加2个头文件
+#include "bt_utils.h"
+#include <log/log.h>
+ 
+bluetooth log关键词总结：
+有文件传入
+09-18 14:45:36.381 D/BtOppObexServer( 7655): Create ServerSession with transport com.android.bluetooth.opp.BluetoothOppTransport@15ae0f02
+向其他手机传文件
+09-18 14:49:01.764 D/BtOppObexClient( 7655): Create ClientSession with transport com.android.bluetooth.opp.BluetoothOppTransport@22d0e720
+ 
+08-26 15:37:18: E/BtOppObexClient( 6454): java.io.IOException: bt socket closed, read return: -1
+about the first issue,when you DO OPP RXTX, A2DP stream is playing, So it will fail.
+ 
+wifi/bt时间片分配策略：
+MSG   [04513/02] WLAN Reserved 7/High    00:17:04.849    riva_cxm_interval.c  04895  [W :CXM:26054] CxM_Interval_resolveStaticLongParams() wlan (30000) bt (120000)
+MSG   [04513/02] WLAN Reserved 7/High    00:17:27.425    riva_cxm_interval.c  04895  [W :CXM:29916] CxM_Interval_resolveStaticLongParams() wlan (60000) bt (90000)
+MSG   [04513/02] WLAN Reserved 7/High    00:17:25.751    riva_cxm_interval.c  04895  [W :CXM:29329] CxM_Interval_resolveStaticLongParams() wlan (50000) bt (40000)
+ 
+音量调节对应的adb log:
+09-18 10:18:04.529 D/bt-btif ( 7274): HFP AT cmd:2 arg_type:2 arg:0 arg:0
+09-18 10:18:10.530 D/bt-btif ( 7274): HFP AT cmd:2 arg_type:2 arg:7 arg:7
+09-18 10:18:14.191 D/bt-btif ( 7274): HFP AT cmd:2 arg_type:2 arg:15 arg:15
+ 
+从supplicant wlan0初始化过程可以看到本机MAC地址：
+wlan0: Own MAC address: c8:51:95:28:0d:54
+ 
+Hands-Free:
+    Role: Slave
+    Address: 2
+    Command: Enable Custom AT Commands
+    Device: y
+    Numeric Value: 0
+ 
+Hands-Free:
+    Role: Slave
+    Address: 3
+    Command: Enable Custom AT Commands
+    Device:
+    Numeric Value: f
+ 
+Hands-Free:
+    Role: Slave
+    Address: 2
+    Command: Enable Custom AT Commands
+    Device: D
+    Numeric Value: 87
+ 
+11d功能一般客户都不需要，现在很多AP设置国家码都没按地区设置，所以11d获取的国家码不可信。建议关闭11d在您的正式出货版本里。
+ 
+错误的国家码导致CH12，CH13扫描不到，禁用802.11d解决问题。
+ 
+在4.3中，sdcard_rw组有全部的读写权限，在Kitkat中，sdcard_r 组有 +rwx 所有权限，实际上这是明显不对的。并不等表示全部，因为Fuse守护进程会在运行时中积极地参与修改应用的权限。这对File APIs canWrite(),canRead()和canExecute()的执行结果有很大的影响，这些方法返回的值被单独地记录在内核文件系统中，所以他们都会返回true，即使试图以POSIX打开文件也会失败。（在4.4的外置sd卡上，是不能在文件夹写入一下文件的，但是当你试图调用canWrite()方法来判断该文件夹是否可写时，它仍会返回true值，所以此法不可取）
+ 
+  android.permission.WRITE_EXTERNAL_STORAGE权限被授给sdcard_r组和sdcard_rw组的成员，但在kitkat中认证write权限需要一些动态的检查，因此FUSE守护进程会被用来补充文件系统的权限，FUSE守护进程会强制赋予拥有特定目录的App每个权限（也就是访问自身数据存储的目录android/data/pack-agename...及一些公共目录)。对于sdcard_rw组中使用-w标志配置的非默认所有者，FUSE守护进程也会强制赋予write-protected权限。
+ 
+  http://www.2cto.com/kf/201405/303835.html
+ 
+root@HWTIT-L8916:/ # ll storage/sdcard1
+drwxrwx--x root     sdcard_r          2015-01-01 14:27 Android
+drwxrwx--- root     sdcard_r          2015-09-28 20:18 LOST.DIR
+drwxrwx--- root     sdcard_r          2015-09-14 16:19 System Volume Information
+ 
+device/qcom/common/rootdir/etc/init.qcom.rc
+mkdir /mnt/media_rw/sdcard1 0700 media_rw media_rw
+ 
+service fuse_sdcard1 /system/bin/sdcard -u 1023 -g 1023 -w 1023 -d /mnt/media_rw/sdcard1 /storage/sdcard1
+    class late_start
+    disabled
+service fuse_sdcard1 /system/bin/sdcard -u 1023 -g 1023 -w 1023 -d /mnt/media_rw/sdcard1 /storage/sdcard1
+    class late_start
+    disabled
+ 
+  控制帧 Type=01
+  Subtype
+  1010    Power Save-Poll
+  1011    RTS
+  1100    CTS
+  1101    ACK
+  1110    CF-End
+  1111    CF-End +CF-Ack
+ 
+从tombstone来看crash在netstat进程中，相关代码为NetworkStatsService.java。
+pid: 7946, tid: 7946, name: netstat  >>> netstat <<<
+ 
+case:02193710
+ 
+当发射端希望发送数据时，首先检测介质是否空闲，若是介质为空闲时，送出RTS（Request To Send请求发送），RTS信号包括发射端的地址、接收端的地址、下一笔数据将持续发送的时间等信息，接收端收到RTS信号后，将响应短信号CTS（Clear To Send），CTS信号上也RTS内记录的持续发送的时间，当发射端收到CTS包后，随即开始发送数据包。接收端收到数据包后，将以包内的CRC（CyClic Redundancy Check，循环冗余校验）的数值来检验包数据是否正确，若是检验结果正确时，接收端将响应ACK包，告知发射端数据己经被成功地接收。当发射端没有收到接收端的ACK包时，将认为包在传输过程中丢失，而一直重新发送包。
+ 
+csmd/ca冲突避免机制：
+1 信道空闲评估算法 DIFS
+2 RTS/CTS
+ 
+（1）首先运用信道空闲算法CCA(天线能量/载波)检测信道是否空闲，若空闲则等待DIFS（SIFS+2*slot time）帧间隔后送出数据
+（2）接受端收到数据后，使用包内的CRC（循环冗余校验）来检验数据是否正确，经过SIFS帧间隔后发送ACK
+（3）发送端接受到ACK后，信道空闲，各发送端进入竞争时间窗口
+ 
+问题根源：问题机SD卡卡座有点偏，SD卡角上有磨损，导致有问题。拆开后壳斜着插卡，测试10次没有问题。相关图片见附件。
+解决方案：无
+测试建议：无
+波及影响：无
+研发测试结果：无
+ 
+从log来看出现了CRC校验错误，无法读取分区表，导致出现了T卡为空的问题。
+需要测量下clk和data信号是否正常，可能是卡座的问题。
+<6>[   74.368189] mmc1: new high speed SD card at address b368
+<6>[   74.373909] mmcblk1: mmc1:b368 SD    121 MiB
+<3>[   74.826428] mmcblk1: error -84 transferring data, sector 0, nr 8, cmd response 0x900, card status 0xb00
+<3>[   74.834795] end_request: I/O error, dev mmcblk1, sector 0
+<3>[   74.840210] Buffer I/O error on device mmcblk1, logical block 0
+<6>[   74.867036]  mmcblk1: unable to read partition table
+ 
+由于爱听4G等第三方APK没有将下载的文件加入MediaProvider数据库，导致使用MTP模式时电脑端无法看见。
+微信也有类似问题。这个需要第三方APK作出修改。
+ 
+ 
+ 
+由于恢复出厂设置以后，db文件被删除，使用系统原生的db文件，导致新生成的文件不在db文件里，从而电脑端看不到。
+重启后重新扫描，生成新的db文件，电脑端可以看到。
+需要上层在恢复出厂设置以后重新扫描下。
+ 
+由目前log可以看到supplicant没扫描到，需要进一步log分析。
+2449:12-30 12:52:41.663 D/wpa_supplicant( 2332): wlan0: nl80211: Scan trigger
+2541:12-30 12:52:41.671 D/wpa_supplicant( 2332): nl80211: Received scan results (0 BSSes)
+ 
+ 
+1 设置->开发人员选项->启用WLAN详细日志功能，抓取adb log
+2 adb shell cat /proc/kmsg > kernel.log, 抓取kernel log'
+3 使用附件的qxdm配置文件，抓取qxdm log
+ 
+log中没有看到有效信息。需要测试复现下。
+ 
+1 使用附件的qxdm config文件抓取qxdm log
+2 将手机固定在AP较多的信道，不过滤mac地址，抓取sniffer log
+  a 安装Omnipeek软件，网上搜索
+  b 购买Omnipeek软件支持的网卡，推荐思科AE3000，并安装Omnipeek官网上的驱动
+  c 点击Start Capture开始抓sniffer log
+3 尝试关闭BT，看问题是否还存在，并提供手机的mac地址
+ 
+2.4 Device Discovery and Enumeration
+MTP does not attempt to define how devices are discovered or identified as supporting MTP. This should be defined in a manner consistent with the underlying transport, and may be performed in more than one way for a given transport.
+ 
+ 
+从log上来看确实没有扫到周围的设备。
+01-05 10:23:59.389 V/BluetoothDiscoveryReceiver(15094): Received: android.bluetooth.adapter.action.DISCOVERY_STARTED
+01-05 10:24:11.987 V/BluetoothDiscoveryReceiver(15094): Received: android.bluetooth.adapter.action.DISCOVERY_FINISHED
+ 
+尝试关闭wifi和到干净的环境中，此问题是否还存在，则抓取adb log和btsnoop log。
+
+supplicant:
+  由于supplicant中nl80211使用netlink，而wext使用ioctl看的比较清楚。
+  wpa_driver_wext_scan -> ioctl(SIOCSIWSCAN)
+
+  kernel: 
+  scan.c::cfg80211_wext_siwscan ->
+
+./drivers/net/wireless/ath/ath9k/main.c:2334:static void ath9k_sw_scan_start(struct ieee80211_hw *hw)
+./drivers/net/wireless/ath/ath9k/htc_drv_main.c:1665:static void ath9k_htc_sw_scan_start(struct ieee80211_hw *hw)
+
+./HLOS-logcat_40-Upload__main_syten_raido_event_l-1000000793-18:37210:01-14 09:20:37.492 I/wpa_supplicant( 4175): wlan0: Trying to associate with SSID 'Huawei-Employee'
+./HLOS-logcat_40-Upload__main_syten_raido_event_l-1000000793-18:45597:01-14 09:26:46.897 I/wpa_supplicant( 4175): wlan0: Trying to associate with SSID 'DIRECT-7BH4:HDR-AS20'
+./HLOS-logcat_40-Upload__main_syten_raido_event_l-1000000793-18:63681:01-14 09:30:55.809 I/wpa_supplicant( 4175): wlan0: Trying to associate with SSID 'Huawei-Employee'
+
+签名是在代码编译过程中根据算法生成的，遇到签名问题只能重新签名或者重新刷机。
+一般是boot.img和system.img版本不匹配导致的，可以在设置->关于手机截个图看一下。
+
+
+ 
+
