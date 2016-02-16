@@ -3,13 +3,12 @@ title: android driver 调试led三色电源指示灯
 ---
 最近同事请假了，我帮忙调试了led三色灯，修改的地方如下：
 1. kernel/arch/arm64/configs/msm-perf_defconfig
-   kernel/arch/arm64/configs/msm_defconfig 
--------------------------------------------
+kernel/arch/arm64/configs/msm_defconfig
 见BoardConfig.mk
 ```cpp
    CONFIG_LEDS_AW2013=y
 ```
-(2) kernel/arch/arm/boot/dts/msm8952_x42_ktouch_c1/msm8952-qrd-skum.dtsi
+2. kernel/arch/arm/boot/dts/msm8952_x42_ktouch_c1/msm8952-qrd-skum.dtsi
 kernel/arch/arm/boot/dts/qcom/msm8952-qrd-skum.dtsi
 为了防止编译脚本的问题，qcom目录下的也要修改。
 
@@ -83,8 +82,9 @@ kernel/arch/arm/boot/dts/qcom/msm8952-qrd-skum.dtsi
 	    status = "okay";
     };
 ```
-(3)解析dtsi文件的相关代码
-配置三色灯属性，
+3. 解析dtsi文件的相关代码
+
+配置三色灯属性
 相关代码见kernel/drivers/leds/leds-aw2013.c中的aw2013_led_probe
 ```cpp
 static int aw2013_led_probe(struct i2c_client *client,
