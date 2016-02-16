@@ -12,15 +12,15 @@ wpa_driver_nl80211_connect(NL80211_CMD_CONNECT)
 
 ## 三、driver部分
 ### 3.1 Connect/Assoc阶段
-1. HDD层
+#### 3.1.1 HDD层
 wlan_hdd_cfg80211.c::__wlan_hdd_cfg80211_connect(struct cfg80211_connect_params) ->
 wlan_hdd_cfg80211.c::wlan_hdd_cfg80211_connect_start -> 
-2. SME层
+#### 3.1.2 SME层
 csrApiRoam.c::csrRoamConnect ->
 csrApiRoam.c::csrRoamIssueJoin(eWNI_SME_JOIN_REQ) ->
 limProcessSmeReqMessages.c::__limProcessSmeJoinReq(LIM_MLM_JOIN_REQ) ->
-3. PE层
-(1) Join阶段
+#### 3.1.3 PE层
+1. Join阶段
 limProcessMlmReqMessages.c::limProcessMlmJoinReq//处理逻辑 
 -> limProcessMlmReqMessages.c::limSetChannel(WDA_CHNL_SWITCH_REQ) ->
 limProcessMlmReqMessages.c::limProcessSwitchChannelJoinReq(gLimJoinFailureTimer) -> 
@@ -28,12 +28,12 @@ limAssocUtils.c::limCheckAndAnnounceJoinSuccess(LIM_MLM_JOIN_CNF)//检查Probe R
 -> limAssocUtils.c::limStaSendAddBssPreAssoc(WDA_ADD_BSS_REQ) ->
 limProcessMlmRspMessages.c::limProcessStaMlmAddBssRspPreAssoc(LIM_MLM_AUTH_REQ) -> 
 limProcessMlmReqMessages.c::limProcessMlmAuthReq(gLimAuthFailureTimer) ->
-(2) Auth阶段
+2. Auth阶段
 limProcessAuthFrame.c::limProcessAuthFrame -> 
 limSecurityUtils.c::limRestoreFromAuthState(LIM_MLM_AUTH_CNF) -> 
 limProcessMlmRspMessages.c::limProcessMlmAuthCnf(LIM_MLM_ASSOC_REQ) ->
 limProcessMlmReqMessages.c::limProcessMlmAssocReq(gLimAssocFailureTimer) ->
-(3) Assoc阶段
+3. Assoc阶段
 limProcessAssocRspFrame.c::limProcessAssocRspFrame//失败时发送LIM_MLM_ASSOC_CNF 
 -> limAssocUtils.c::limStaSendAddBss(WDA_ADD_BSS_REQ)//Join阶段有PreAssoc 
 -> limAssocUtils.c::limAddStaSelf(WDA_ADD_STA_REQ) -> 
@@ -69,6 +69,7 @@ struct tAddStaParams            Add Sta的结构体参数
 struct tpSirAssocRsp            AssocRsp Frame对应的结构体
 
 ## 四、对应的kernel log
+
 //kernel调用wlan_hdd_cfg80211_connect
 [11:08:52.828310] wlan: [20318:I :HDD] __wlan_hdd_cfg80211_connect: device_mode = WLAN_HDD_INFRA_STATION (0)
 //根据struct cfg80211_connect_params设置连接参数
