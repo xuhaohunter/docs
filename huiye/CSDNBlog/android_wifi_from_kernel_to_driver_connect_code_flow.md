@@ -64,22 +64,23 @@ wlan_hdd_assoc.c::hdd_RoamSetKeyCompleteHandler
 sme_Api.c::sme_DHCPStartInd(WDA_DHCP_START_IND)
 
 ## 三、涉及到的重要结构体
-struct cfg80211_connect_params  kernel传给driver的连接参数
-struct tCsrRoamProfile          Roam切换的参数
-struct tpPESession              PE层的参数
-struct tpAddBssParams           Add Bss的参数
-struct tAddStaParams            Add Sta的结构体参数
-struct tpSirAssocRsp            AssocRsp Frame对应的结构体
+
+struct cfg80211_connect_params  kernel传给driver的连接参数    
+struct tCsrRoamProfile          Roam切换的参数    
+struct tpPESession              PE层的参数    
+struct tpAddBssParams           Add Bss的参数    
+struct tAddStaParams            Add Sta的结构体参数    
+struct tpSirAssocRsp            AssocRsp Frame对应的结构体    
 
 ## 四、对应的kernel log
 
-//kernel调用wlan_hdd_cfg80211_connect
-[11:08:52.828310] wlan: [20318:I :HDD] __wlan_hdd_cfg80211_connect: device_mode = WLAN_HDD_INFRA_STATION (0)
-//根据struct cfg80211_connect_params设置连接参数
-[11:08:52.828319] wlan: [20318:I :HDD] Enter:wlan_hdd_cfg80211_set_privacy
-[11:08:52.828347] wlan: [20318:I :HDD] wlan_hdd_set_akm_suite: setting key mgmt type to PSK
-[11:08:52.828439] wlan: [20318:I :HDD] wlan_hdd_cfg80211_connect_start: 10768: 
-Connect to SSID: 2.4GHz opertating Channel: 0
+//kernel调用wlan_hdd_cfg80211_connect    
+[11:08:52.828310] wlan: [20318:I :HDD] __wlan_hdd_cfg80211_connect: device_mode =   WLAN_HDD_INFRA_STATION (0)  
+//根据struct cfg80211_connect_params设置连接参数  
+[11:08:52.828319] wlan: [20318:I :HDD] Enter:wlan_hdd_cfg80211_set_privacy  
+[11:08:52.828347] wlan: [20318:I :HDD] wlan_hdd_set_akm_suite: setting key mgmt type to PSK  
+[11:08:52.828439] wlan: [20318:I :HDD] wlan_hdd_cfg80211_connect_start: 10768:   
+Connect to SSID: 2.4GHz opertating Channel: 0  
 //SME层
 [11:08:52.828522] wlan: [20318:I :SME] csrRoamConnect: 6662: called  BSSType = eSIR_INFRA_AP_MODE (1) authtype = 8 encryType = 6
 [11:08:52.829096] wlan: [20233:I :SME] Attempting to Join Bssid= c0:61:18:3b:82:4f
