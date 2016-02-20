@@ -1,11 +1,15 @@
 拉代码命令：
 repo init 8916-hw;repo sync -j8;repo start local --all;source build/envsetup.sh;choosecombo 1 11 3 1;make update-api;make -j20
-repo init 8909-1136;repo sync -j8;repo start local --all;source build/envsetup.sh;choosecombo 1 4 3;make update-api;make -j20//海尔
+repo init 8909-1136;repo sync -j8;repo start local --all;source build/envsetup.sh;choosecombo 1 4 3;make update-api;make -j20//海尔X37 X20
 repo init 8916-ap;repo sync -j8;repo start local --all;source build/envsetup.sh;choosecombo 1 msm8916_x39_p590l 3;make update-api;make -j20
 repo init 8x09-app;repo sync -j8;repo start local --all;source build/envsetup.sh;choosecombo 1 15 3;make update-api;make -j20
 repo init 8952-ap;repo sync -j8;repo start local --all;source build/envsetup.sh;choosecombo 1 msm8952_x40_p668l 13;make update-api;make -j20
 repo init 8909-5.1;repo sync -j8;repo start local --all;source build/envsetup.sh;choosecombo 1 msm8909_x29_650l 3;make update-api;make -j20//X29
 repo init 8952-a2;repo sync -j8;repo start local --all;source build/envsetup.sh;choosecombo 1 msm8909_x29_650l 3;make update-api;make -j20
+git clone git@192.168.10.104:repositories/mt6755-ap-temp
+
+hardware/mediatek/wlan/wpa_supplicant_8
+
  
 WCN3615
  
@@ -100,6 +104,9 @@ sed -i "s/pr_debug/pr_err/g" `grep pr_debug -rl ./`
  
 下载SD卡文档的目录：
 http://www.sdcard.org/downloads/pls/simplified_specs/
+
+wifi kernel log关键字：
+grep -irns "Auth Frame Received\|Sending Auth Frame\|Received Assoc Req Frame\|Sending Assoc resp\|EAPOL\|DHCP DISCOVER\|DHCP OFFER\|DHCP REQUEST\|DHCP INFORM\|DHCP ACK\|DHCP NACK" ./haier_hotspot.txt
  
 tar和split
  
@@ -136,8 +143,8 @@ sudo adduser 你的用户名 vboxusers
 cat /etc/group | grep vboxuser
 将xuhao加入sudo目录：
 sudo groupadd usbfs
-sudo adduser kuein vboxusers
-sudo adduser kuein usbfs
+sudo adduser xuhao vboxusers
+sudo adduser xuhao usbfs
 
 virtual全屏需要安装Devices->GuestAdditions
 出现VERR_PDM_MEDIA_PACKED错误时手动弹出光驱
@@ -467,4 +474,31 @@ supplicant:
 
 customer can search a lincense on the internet.
 eg ZTE walshcode 1071/ShangFeixun01 4855sfcc 4802
+
+
+1 抓取adb log
+  a 打开设置->开发者选项->启用WLAN详细日志记录功能
+  b 抓取adb log
+2 使用附件中的QXDM_config_wifi.cfg配置文件抓取qxdm log
+
+
+
+
+
+
+//连接iDevice用时5秒，不算慢
+//3秒是正常的，由log可以看到连接上AP花了1秒，获取IP地址花了4秒
+//其中由于回复DHCPREQUEST慢了1秒
+//associated到handshake completed慢了1秒
+02-19 16:18:19.041 I/hostapd (13813): wlan0: STA 98:b8:e3:8d:bb:0e IEEE 802.11: associated
+02-19 16:18:20.276 I/hostapd (13813): wlan0: AP-STA-CONNECTED 98:b8:e3:8d:bb:0e
+02-19 16:18:20.277 I/hostapd (13813): wlan0: STA 98:b8:e3:8d:bb:0e WPA: pairwise key handshake completed (RSN)
+02-19 16:18:23.242 I/dnsmasq (13836): DHCPDISCOVER(wlan0) 98:b8:e3:8d:bb:0e 
+02-19 16:18:23.243 I/dnsmasq (13836): DHCPOFFER(wlan0) 192.168.43.129 98:b8:e3:8d:bb:0e 
+02-19 16:18:24.415 I/dnsmasq (13836): DHCPREQUEST(wlan0) 192.168.43.129 98:b8:e3:8d:bb:0e 
+02-19 16:18:24.415 I/dnsmasq (13836): DHCPACK(wlan0) 192.168.43.129 98:b8:e3:8d:bb:0e iDevice
+
+[16:18:19.591680] wlan: [13792:I :HDD] hdd_dhcp_pkt_info: 583: DHCP INFORM
+[16:18:19.592398] wlan: [0:I :HDD] hdd_dhcp_pkt_info: 574: DHCP ACK
+
 

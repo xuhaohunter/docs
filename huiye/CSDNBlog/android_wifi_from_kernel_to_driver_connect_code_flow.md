@@ -20,7 +20,7 @@ csrApiRoam.c::csrRoamConnect ->
 csrApiRoam.c::csrRoamIssueJoin(eWNI_SME_JOIN_REQ) ->
 limProcessSmeReqMessages.c::__limProcessSmeJoinReq(LIM_MLM_JOIN_REQ) ->
 #### 3.1.3 PE层
-1. Join阶段
+1. Join阶段  
 limProcessMlmReqMessages.c::limProcessMlmJoinReq//处理逻辑 
 -> limProcessMlmReqMessages.c::limSetChannel(WDA_CHNL_SWITCH_REQ) ->
 limProcessMlmReqMessages.c::limProcessSwitchChannelJoinReq(gLimJoinFailureTimer) -> 
@@ -28,12 +28,12 @@ limAssocUtils.c::limCheckAndAnnounceJoinSuccess(LIM_MLM_JOIN_CNF)//检查Probe R
 -> limAssocUtils.c::limStaSendAddBssPreAssoc(WDA_ADD_BSS_REQ) ->
 limProcessMlmRspMessages.c::limProcessStaMlmAddBssRspPreAssoc(LIM_MLM_AUTH_REQ) -> 
 limProcessMlmReqMessages.c::limProcessMlmAuthReq(gLimAuthFailureTimer) ->
-2. Auth阶段
+2. Auth阶段  
 limProcessAuthFrame.c::limProcessAuthFrame -> 
 limSecurityUtils.c::limRestoreFromAuthState(LIM_MLM_AUTH_CNF) -> 
 limProcessMlmRspMessages.c::limProcessMlmAuthCnf(LIM_MLM_ASSOC_REQ) ->
 limProcessMlmReqMessages.c::limProcessMlmAssocReq(gLimAssocFailureTimer) ->
-3. Assoc阶段
+3. Assoc阶段  
 limProcessAssocRspFrame.c::limProcessAssocRspFrame//失败时发送LIM_MLM_ASSOC_CNF 
 -> limAssocUtils.c::limStaSendAddBss(WDA_ADD_BSS_REQ)//Join阶段有PreAssoc 
 -> limAssocUtils.c::limAddStaSelf(WDA_ADD_STA_REQ) -> 
