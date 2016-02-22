@@ -484,6 +484,30 @@ eg ZTE walshcode 1071/ShangFeixun01 4855sfcc 4802
 
 
 
+//第一次
+02-19 16:17:33.863 I/hostapd (13313): wlan0: STA 2c:33:7a:00:b1:4f IEEE 802.11: associated
+02-19 16:17:33.863 I/hostapd (13313): wlan0: STA 2c:33:7a:00:b1:4f IEEE 802.11: associated
+02-19 16:17:33.943 I/hostapd (13313): wlan0: AP-STA-CONNECTED 2c:33:7a:00:b1:4f
+02-19 16:17:33.943 I/hostapd (13313): wlan0: STA 2c:33:7a:00:b1:4f WPA: pairwise key handshake completed (RSN)
+02-19 16:17:33.944 I/hostapd (13313): wlan0: STA 2c:33:7a:00:b1:4f WPA: pairwise key handshake completed (RSN)
+02-19 16:17:33.955 I/dnsmasq (13320): DHCPREQUEST(wlan0) 192.168.43.79 2c:33:7a:00:b1:4f 
+02-19 16:17:33.955 I/dnsmasq (13320): DHCPACK(wlan0) 192.168.43.79 2c:33:7a:00:b1:4f dickiezh-HP
+02-19 16:17:37.081 I/dnsmasq (13320): DHCPINFORM(wlan0) 192.168.43.79 2c:33:7a:00:b1:4f 
+02-19 16:17:37.081 I/dnsmasq (13320): DHCPACK(wlan0) 192.168.43.79 2c:33:7a:00:b1:4f dickiezh-HP
+
+
+//第二次
+02-19 16:18:15.973 I/hostapd (13813): wlan0: STA 2c:33:7a:00:b1:4f IEEE 802.11: associated
+02-19 16:18:15.973 I/hostapd (13813): wlan0: STA 2c:33:7a:00:b1:4f IEEE 802.11: associated
+02-19 16:18:16.076 I/hostapd (13813): wlan0: AP-STA-CONNECTED 2c:33:7a:00:b1:4f
+02-19 16:18:16.077 I/hostapd (13813): wlan0: STA 2c:33:7a:00:b1:4f WPA: pairwise key handshake completed (RSN)
+02-19 16:18:16.077 I/hostapd (13813): wlan0: STA 2c:33:7a:00:b1:4f WPA: pairwise key handshake completed (RSN)
+02-19 16:18:16.207 I/dnsmasq (13836): DHCPREQUEST(wlan0) 192.168.43.79 2c:33:7a:00:b1:4f 
+02-19 16:18:16.208 I/dnsmasq (13836): DHCPACK(wlan0) 192.168.43.79 2c:33:7a:00:b1:4f dickiezh-HP
+02-19 16:18:19.592 I/dnsmasq (13836): DHCPINFORM(wlan0) 192.168.43.79 2c:33:7a:00:b1:4f 
+02-19 16:18:19.592 I/dnsmasq (13836): DHCPACK(wlan0) 192.168.43.79 2c:33:7a:00:b1:4f dickiezh-HP
+02-19 16:19:38.271 I/dnsmasq (13836): DHCPINFORM(wlan0) 192.168.43.79 2c:33:7a:00:b1:4f 
+02-19 16:19:38.271 I/dnsmasq (13836): DHCPACK(wlan0) 192.168.43.79 2c:33:7a:00:b1:4f dickiezh-HP
 
 
 //连接iDevice用时5秒，不算慢
@@ -498,7 +522,6 @@ eg ZTE walshcode 1071/ShangFeixun01 4855sfcc 4802
 02-19 16:18:24.415 I/dnsmasq (13836): DHCPREQUEST(wlan0) 192.168.43.129 98:b8:e3:8d:bb:0e 
 02-19 16:18:24.415 I/dnsmasq (13836): DHCPACK(wlan0) 192.168.43.129 98:b8:e3:8d:bb:0e iDevice
 
-[16:18:19.591680] wlan: [13792:I :HDD] hdd_dhcp_pkt_info: 583: DHCP INFORM
-[16:18:19.592398] wlan: [0:I :HDD] hdd_dhcp_pkt_info: 574: DHCP ACK
+grep -irns "dhcp\|2c:33:7a:00:b1:4f\|hostapd\|WifiService\|WifiStateMachine\|wpa_supplicant" ./
 
 
