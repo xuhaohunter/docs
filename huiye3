@@ -5,10 +5,44 @@ repo init 8916-ap;repo sync -j8;repo start local --all;source build/envsetup.sh;
 repo init 8x09-app;repo sync -j8;repo start local --all;source build/envsetup.sh;choosecombo 1 15 3;make update-api;make -j20
 repo init 8952-ap;repo sync -j8;repo start local --all;source build/envsetup.sh;choosecombo 1 msm8952_x40_p668l 13;make update-api;make -j20
 repo init 8909-5.1;repo sync -j8;repo start local --all;source build/envsetup.sh;choosecombo 1 msm8909_x29_650l 3;make update-api;make -j20//X29
-repo init 8952-a2;repo sync -j8;repo start local --all;source build/envsetup.sh;choosecombo 1 msm8909_x29_650l 3;make update-api;make -j20
-git clone git@192.168.10.104:repositories/mt6755-ap-temp
+git clone git@192.168.10.104:repositories/X42_KTOUCH_C1 -b X42_KTOUCH_C1;source build/envsetup.sh;choosecombo 1 14 3;make update-api;make -j20//X42
 
-hardware/mediatek/wlan/wpa_supplicant_8
+TP相关：
+source build/envsetup.sh
+chooseproduct
+java -version
+make aboot -j4
+rm out/target/product/msm8909_x31_cp8721/obj/ -rf
+rm out/target/product/msm8909_x31_cp8721/boot.img
+rm out/target/product/msm8909_x31_cp8721/emmc_appsboot.mbn
+make aboot -j4  &&  make bootimage -j4
+
+bootable/bootloader/lk$ vim target/msm8909_x31_cp8721/oem_panel.c
+#	modified:   dev/gcdb/display/include/panel_ili9881c_720p_hsd_5in_helitai_x31_cp8721_video.h
+#	modified:   target/msm8909_x31_cp8721/oem_panel.c
+
+bcompare  panel_ili9881c_720p_hsd_5in_helitai_x31_cp8721_video.h  ~/Downloads/8721_20160306/HSD_20160306/panel_ili9881c_720p_hsd_5in_helitai_x31_cp8721_video_new.h
+
+git branch -av
+
+总结
+boot下改.h
+kernel下改dtsi
+
+xuhao@xuhao-2-7:~/projects/8909-X31_eng/kernel/arch/arm/boot/dts/msm8909_x31_cp8721$ git status .
+# Not currently on any branch.
+# Changes not staged for commit:
+#   (use "git add <file>..." to update what will be committed)
+#   (use "git checkout -- <file>..." to discard changes in working directory)
+#
+#	modified:   msm8909-mdss-panels.dtsi
+#
+# Untracked files:
+#   (use "git add <file>..." to include in what will be committed)
+#
+#	dsi-panel-ili9881c-720p-boe-5in-helitai-video.dtsi
+
+
 
  
 WCN3615
@@ -107,7 +141,9 @@ http://www.sdcard.org/downloads/pls/simplified_specs/
 
 wifi kernel log关键字：
 grep -irns "Auth Frame Received\|Sending Auth Frame\|Received Assoc Req Frame\|Sending Assoc resp\|EAPOL\|DHCP DISCOVER\|DHCP OFFER\|DHCP REQUEST\|DHCP INFORM\|DHCP ACK\|DHCP NACK" ./haier_hotspot.txt
- 
+在kernel中添加log
+VOS_TRACE( VOS_MODULE_ID_VOSS, VOS_TRACE_LEVEL_ERROR, FL("Enter limProcessAssocReqFrame.c limProcessAssocReqFrame call limAddSta"));
+
 tar和split
  
 adb logcat -v time | tee slow_sdcard3.log | grep -E "MountService"
@@ -137,6 +173,9 @@ patch -p1 < 123.patch或者git apply 123.patch
 cd .repo/projects/external/bluetooth/
 rm bluedroid.git/ -rf
 repo start local external/bluetooth/bluedroid/
+
+海尔项目开USB调试：
+#*20160606#
  
 ubuntu virtualbox识别USB
 sudo adduser 你的用户名 vboxusers
@@ -484,36 +523,21 @@ eg ZTE walshcode 1071/ShangFeixun01 4855sfcc 4802
 
 
 
-//第一次
-02-19 16:17:33.863 I/hostapd (13313): wlan0: STA 2c:33:7a:00:b1:4f IEEE 802.11: associated
+//第一次连接，dickiezh-HP耗时不到1秒
 02-19 16:17:33.863 I/hostapd (13313): wlan0: STA 2c:33:7a:00:b1:4f IEEE 802.11: associated
 02-19 16:17:33.943 I/hostapd (13313): wlan0: AP-STA-CONNECTED 2c:33:7a:00:b1:4f
 02-19 16:17:33.943 I/hostapd (13313): wlan0: STA 2c:33:7a:00:b1:4f WPA: pairwise key handshake completed (RSN)
 02-19 16:17:33.944 I/hostapd (13313): wlan0: STA 2c:33:7a:00:b1:4f WPA: pairwise key handshake completed (RSN)
 02-19 16:17:33.955 I/dnsmasq (13320): DHCPREQUEST(wlan0) 192.168.43.79 2c:33:7a:00:b1:4f 
 02-19 16:17:33.955 I/dnsmasq (13320): DHCPACK(wlan0) 192.168.43.79 2c:33:7a:00:b1:4f dickiezh-HP
-02-19 16:17:37.081 I/dnsmasq (13320): DHCPINFORM(wlan0) 192.168.43.79 2c:33:7a:00:b1:4f 
-02-19 16:17:37.081 I/dnsmasq (13320): DHCPACK(wlan0) 192.168.43.79 2c:33:7a:00:b1:4f dickiezh-HP
-
-
-//第二次
-02-19 16:18:15.973 I/hostapd (13813): wlan0: STA 2c:33:7a:00:b1:4f IEEE 802.11: associated
+//第二次连接，dickiezh-HP耗时不到1秒
 02-19 16:18:15.973 I/hostapd (13813): wlan0: STA 2c:33:7a:00:b1:4f IEEE 802.11: associated
 02-19 16:18:16.076 I/hostapd (13813): wlan0: AP-STA-CONNECTED 2c:33:7a:00:b1:4f
 02-19 16:18:16.077 I/hostapd (13813): wlan0: STA 2c:33:7a:00:b1:4f WPA: pairwise key handshake completed (RSN)
 02-19 16:18:16.077 I/hostapd (13813): wlan0: STA 2c:33:7a:00:b1:4f WPA: pairwise key handshake completed (RSN)
 02-19 16:18:16.207 I/dnsmasq (13836): DHCPREQUEST(wlan0) 192.168.43.79 2c:33:7a:00:b1:4f 
 02-19 16:18:16.208 I/dnsmasq (13836): DHCPACK(wlan0) 192.168.43.79 2c:33:7a:00:b1:4f dickiezh-HP
-02-19 16:18:19.592 I/dnsmasq (13836): DHCPINFORM(wlan0) 192.168.43.79 2c:33:7a:00:b1:4f 
-02-19 16:18:19.592 I/dnsmasq (13836): DHCPACK(wlan0) 192.168.43.79 2c:33:7a:00:b1:4f dickiezh-HP
-02-19 16:19:38.271 I/dnsmasq (13836): DHCPINFORM(wlan0) 192.168.43.79 2c:33:7a:00:b1:4f 
-02-19 16:19:38.271 I/dnsmasq (13836): DHCPACK(wlan0) 192.168.43.79 2c:33:7a:00:b1:4f dickiezh-HP
-
-
-//连接iDevice用时5秒，不算慢
-//3秒是正常的，由log可以看到连接上AP花了1秒，获取IP地址花了4秒
-//其中由于回复DHCPREQUEST慢了1秒
-//associated到handshake completed慢了1秒
+//第三次连接，iDevice耗时5秒，其中获取IP地址用了4秒
 02-19 16:18:19.041 I/hostapd (13813): wlan0: STA 98:b8:e3:8d:bb:0e IEEE 802.11: associated
 02-19 16:18:20.276 I/hostapd (13813): wlan0: AP-STA-CONNECTED 98:b8:e3:8d:bb:0e
 02-19 16:18:20.277 I/hostapd (13813): wlan0: STA 98:b8:e3:8d:bb:0e WPA: pairwise key handshake completed (RSN)
@@ -521,7 +545,36 @@ eg ZTE walshcode 1071/ShangFeixun01 4855sfcc 4802
 02-19 16:18:23.243 I/dnsmasq (13836): DHCPOFFER(wlan0) 192.168.43.129 98:b8:e3:8d:bb:0e 
 02-19 16:18:24.415 I/dnsmasq (13836): DHCPREQUEST(wlan0) 192.168.43.129 98:b8:e3:8d:bb:0e 
 02-19 16:18:24.415 I/dnsmasq (13836): DHCPACK(wlan0) 192.168.43.129 98:b8:e3:8d:bb:0e iDevice
+从log可以看到3次连接都是正常的。
+如果上次连接获取的IP能用则连接速度很快，如果以前没有获取过IP则连接速度一般，
+如果以前获取的IP和热点不在统一网段，则以前获取的IP地址不能用，需要重新获取IP地址，连接速度相对较慢。
 
-grep -irns "dhcp\|2c:33:7a:00:b1:4f\|hostapd\|WifiService\|WifiStateMachine\|wpa_supplicant" ./
+可以做个实验，
+1 手机和笔记本现连接至同一AP或者热点，保证二者获取的IP在同一网段。
+2 再将手机和笔记本连接至海尔手机创建的热点，连接时间应该是一样的。
+
+Hi 魏丽，
+  麻烦重新抓下log。
+  1 抓取adb log
+    a 打开设置->开发者选项->启用WLAN详细日志记录功能
+    b 抓取adb log
+  2 使用附件中的QXDM_config_wifi.cfg配置文件抓取qxdm log
+  3 使用附件的tcpdump工具抓取tcpdump
+    a 手机获取root权限
+    b 将附件的tcpdump工具push到system/xbin目录下
+    c 使用tcpdump -i any -p -s 0 -w /storage/sdcard0/capture.pcap命令抓取tcpdump
+ 
+有环境干扰，天线距离、方向等印象，会存在速度的差异。
+
+
+在屏蔽室使用联想笔记本测试结果如下：
+1 45.7M/s
+2 45.3M/s
+3 45.6M/s
+对比使用华为手机
+1 44.6
+2 44.3
+3 44.9
+可以看到二者速度相差很小。请在屏蔽室同等条件下验证。
 
 
