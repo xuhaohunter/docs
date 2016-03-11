@@ -577,4 +577,27 @@ Hi 魏丽，
 3 44.9
 可以看到二者速度相差很小。请在屏蔽室同等条件下验证。
 
+http://192.168.10.91:8081/#/c/45046/
+http://192.168.10.91:8081/#/c/45046/1/CORE/HDD/src/wlan_hdd_cfg80211.c
+
+http://192.168.10.91:8081/#/c/39043/
+
+http://192.168.10.91:8081/#/c/35695/1/net/wireless/util.c
+
+http://192.168.10.91:8081/#/c/36034/1/CORE/MAC/src/pe/lim/limProcessMlmRspMessages.c
+
+http://192.168.10.91:8081/#/c/39043/1/CORE/HDD/src/wlan_hdd_main.c
+
+http://192.168.10.91:8081/#/c/48436/1/CORE/VOSS/src/vos_nvitem.c
+
+http://192.168.10.91:8081/#/c/47459/1/drivers/mmc/core/core.c
+
+屏蔽室测试结果wifi下载速度为43.0Mb/s，对比8909平台海尔G101下载速度为41.4Mb/s。
+
+
+#for msm8909_x20_g151
+#ifeq ($(TARGET_PRODUCT), msm8916_titan)  //为什么这个生效，下面一个不生效
+ifeq (msm8916_titan, $(filter msm8916_titan, $(TARGET_PRODUCT)))
+CDEFINES += -DCHANNEL_LIMITS
+endif
 
