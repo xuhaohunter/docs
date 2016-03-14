@@ -1,0 +1,44 @@
+From 38d83ed451990694489d831b1929361dd159d2da Mon Sep 17 00:00:00 2001
+From: xuhao <xuhao@hymost.com>
+Date: Mon, 14 Mar 2016 14:12:03 +0800
+Subject: [PATCH] set wifi channel limit to 1-11
+
+Change-Id: I46ef8d05fb2bf59791f62837e0cd18a7700d968a
+
+diff --git a/CORE/HDD/src/wlan_hdd_cfg80211.c b/CORE/HDD/src/wlan_hdd_cfg80211.c
+index 56c7d5b..c3cb5de 100644
+--- a/CORE/HDD/src/wlan_hdd_cfg80211.c
++++ b/CORE/HDD/src/wlan_hdd_cfg80211.c
+@@ -215,9 +215,13 @@ static struct ieee80211_channel hdd_channels_2_4_GHZ[] =
+     HDD2GHZCHAN(2452, 9, 0) ,
+     HDD2GHZCHAN(2457, 10, 0) ,
+     HDD2GHZCHAN(2462, 11, 0) ,
++/* 0082347 xuhao:set x20_g151 wifi channel limit to 1-11 */
++#ifndef CHANNEL_LIMITS
+     HDD2GHZCHAN(2467, 12, 0) ,
+     HDD2GHZCHAN(2472, 13, 0) ,
+     HDD2GHZCHAN(2484, 14, 0) ,
++#endif
++/* 0082347 xuhao:set x20_g151 wifi channel limit to 1-11 */
+ };
+ 
+ static struct ieee80211_channel hdd_social_channels_2_4_GHZ[] =
+diff --git a/Kbuild b/Kbuild
+index 9a665a9..e1a946c 100644
+--- a/Kbuild
++++ b/Kbuild
+@@ -673,6 +673,11 @@ ifneq ($(wildcard $(srctree)/arch/$(SRCARCH)/mach-msm/include/mach/msm_smsm.h),)
+ CDEFINES += -DEXISTS_MSM_SMSM
+ endif
+ 
++#for msm8909_x20_g151
++ifeq ($(TARGET_PRODUCT), msm8909_x20_g151)
++CDEFINES += -DCHANNEL_LIMITS
++endif
++
+ # Fix build for GCC 4.7
+ EXTRA_CFLAGS += -Wno-maybe-uninitialized -Wno-unused-function
+ 
+-- 
+1.7.9.5
+
