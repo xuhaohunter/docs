@@ -21,6 +21,9 @@ bootable/bootloader/lk$ vim target/msm8909_x31_cp8721/oem_panel.c
 #	modified:   dev/gcdb/display/include/panel_ili9881c_720p_hsd_5in_helitai_x31_cp8721_video.h
 #	modified:   target/msm8909_x31_cp8721/oem_panel.c
 
+TP对应的dtsi
+vim   boot/dts/msm8909_x31_cp8721/msm8909-qrd-skuc.dtsi 搜索mtar
+
 bcompare  panel_ili9881c_720p_hsd_5in_helitai_x31_cp8721_video.h  ~/Downloads/8721_20160306/HSD_20160306/panel_ili9881c_720p_hsd_5in_helitai_x31_cp8721_video_new.h
 
 git branch -av
@@ -394,6 +397,25 @@ Hands-Free:
     Numeric Value: 87
  
 11d功能一般客户都不需要，现在很多AP设置国家码都没按地区设置，所以11d获取的国家码不可信。建议关闭11d在您的正式出货版本里。
+
+比如将supplicant 里面，wpa_drvier_nl80211_set_country() 函数直接 return 0; 可以将wpa_supplicant通过cfg80211接口改变CC的路堵住
+将driver 的hdd_ioctl（）里面处理
+else if ( strncasecmp(command, "COUNTRY", 7) == 0 )分支直接返回0,可以将第五条路堵住。
+Created By: Zhaoming Shu (3/14/2016 6:15 PM)
+有五种方法会影响Country code:
+1. DefaultCountryTable field in WCNSS_qcom_wlan_nv.bin - read during driver initialization
+2. gStaCountryCode parameter in WCNSS_qcom_cfg.ini – read during driver initialization to replace default country code in WCNSS_qcom_wlan_nv.bin
+3. Country IE from AP defined by 802.11d – information given by AP
+4. “iw reg set” command – set from userspace application over cfg80211 interface
+5. Private IOCTL with “COUNTRY” command – set from userspace application over wext interface
+
+gCountryCodePriority配成1时 （缺省），优先级为：
+Overall priority would be userspace commands > 802.11d > gStaCountryCode in WCNSS_qcom_cfg.ini > DefaultCountryTable in WCNSS_qcom_wlan_nv.bin
+
+配成0时，
+Overall priority would be 802.11d > userspace commands > gStaCountryCode in WCNSS_qcom_cfg.ini > DefaultCountryTable in WCNSS_qcom_wlan_nv.bin
+
+所以上层命令配下来的，优先级都比你配的高，要想CC不变，只能去改driver或者wpa_supplicant代码，让配置CC的代码直接返回，但这种改动是不能Mainline的。谢谢
  
 错误的国家码导致CH12，CH13扫描不到，禁用802.11d解决问题。
  
@@ -600,4 +622,21 @@ http://192.168.10.91:8081/#/c/47459/1/drivers/mmc/core/core.c
 ifeq (msm8916_titan, $(filter msm8916_titan, $(TARGET_PRODUCT)))
 CDEFINES += -DCHANNEL_LIMITS
 endif
+
+<3>[   51.386745] wlan: [4147:E :HDD] hdd_is_5g_supported: Hardware doesn't supports 5Ghz
+<3>[   51.389127] wlan: [4147:E :HDD] __wlan_hdd_cfg80211_set_spoofed_mac_oui: 4262: MAC_SPOOFED_SCAN disabled in ini
+<3>[   51.445914] wlan: [4147:E :HDD] __wlan_hdd_cfg80211_ll_stats_get: 1854: Link Layer Statistics not supported by Firmware
+<6>[   51.553431] cfg80211: Calling CRDA for country: CN
+<3>[   51.553611] wlan: [26:E :VOS] error: wiphy->bands is NULL, i = 1
+<3>[   51.553623] wlan: [26:E :VOS] error: wiphy->bands is NULL, i = 2
+<6>[   51.553663] cfg80211: Regulatory domain changed to country: CN
+<6>[   51.553669] cfg80211:   (start_freq - end_freq @ bandwidth), (max_antenna_gain, max_eirp)
+<6>[   51.553675] cfg80211:   (2402000 KHz - 2482000 KHz @ 40000 KHz), (N/A, 2000 mBm)
+<6>[   51.553681] cfg80211:   (5170000 KHz - 5250000 KHz @ 80000 KHz), (600 mBi, 2300 mBm)
+<6>[   51.553687] cfg80211:   (5250000 KHz - 5330000 KHz @ 80000 KHz), (600 mBi, 2300 mBm)
+<6>[   51.553693] cfg80211:   (5735000 KHz - 5835000 KHz @ 80000 KHz), (600 mBi, 3000 mBm)
+<6>[   51.553698] cfg80211:   (57240000 KHz - 59400000 KHz @ 2160000 KHz), (N/A, 2800 mBm)
+<6>[   51.553703] cfg80211:   (59400000 KHz - 63720000 KHz @ 2160000 KHz), (N/A, 4400 mBm)
+<6>[   51.553709] cfg80211:   (63720000 KHz - 65880000 KHz @ 2160000 KHz), (N/A, 2800 mBm)
+
 

@@ -1,0 +1,29 @@
+From a397afa98864be7a89930e5482406aeca64ec23f Mon Sep 17 00:00:00 2001
+From: xuhao <xuhao@hymost.com>
+Date: Mon, 14 Mar 2016 14:37:02 +0800
+Subject: [PATCH] set wifi channel limit to 1-11 by kernel
+
+Change-Id: Ib0f2ddbc3a2daeda291135bcc8ac126b4b222585
+
+diff --git a/net/wireless/util.c b/net/wireless/util.c
+index 1b6f490..f77b39f 100644
+--- a/net/wireless/util.c
++++ b/net/wireless/util.c
+@@ -43,10 +43,12 @@ int ieee80211_channel_to_frequency(int chan, enum ieee80211_band band)
+ 		return 0; /* not supported */
+ 	switch (band) {
+ 	case IEEE80211_BAND_2GHZ:
+-		if (chan == 14)
++		/*if (chan == 14)
+ 			return 2484;
+-		else if (chan < 14)
++		else*/ if (chan < 12) {
++                        pr_info("In ieee80211_channel_to_frequency limit channel to 11");
+ 			return 2407 + chan * 5;
++                }
+ 		break;
+ 	case IEEE80211_BAND_5GHZ:
+ 		if (chan >= 182 && chan <= 196)
+-- 
+1.7.9.5
+
