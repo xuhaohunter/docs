@@ -1,11 +1,12 @@
 拉代码命令：
-repo init 8916-hw;repo sync -j8;repo start local --all;source build/envsetup.sh;choosecombo 1 11 3 1;make update-api;make -j20
+ repo init 8916-hw;repo sync -j8;repo start local --all;source build/envsetup.sh;choosecombo 1 11 3 1;make update-api;make -j20
 repo init 8909-1136;repo sync -j8;repo start local --all;source build/envsetup.sh;choosecombo 1 4 3;make update-api;make -j20//海尔X37 X20
 repo init 8916-ap;repo sync -j8;repo start local --all;source build/envsetup.sh;choosecombo 1 msm8916_x39_p590l 3;make update-api;make -j20
 repo init 8x09-app;repo sync -j8;repo start local --all;source build/envsetup.sh;choosecombo 1 15 3;make update-api;make -j20
 repo init 8952-ap;repo sync -j8;repo start local --all;source build/envsetup.sh;choosecombo 1 msm8952_x40_p668l 13;make update-api;make -j20
 repo init 8909-5.1;repo sync -j8;repo start local --all;source build/envsetup.sh;choosecombo 1 msm8909_x29_650l 3;make update-api;make -j20//X29
 git clone git@192.168.10.104:repositories/X42_KTOUCH_C1 -b X42_KTOUCH_C1;source build/envsetup.sh;choosecombo 1 14 3;make update-api;make -j20//X42
+repo init MT6750;repo sync;
 
 TP相关：
 source build/envsetup.sh
@@ -45,7 +46,8 @@ xuhao@xuhao-2-7:~/projects/8909-X31_eng/kernel/arch/arm/boot/dts/msm8909_x31_cp8
 #
 #	dsi-panel-ili9881c-720p-boe-5in-helitai-video.dtsi
 
-
+加log注意防止空指针的情况，防止起不来。
+比如supplicant、kernel等
 
  
 WCN3615
@@ -95,7 +97,8 @@ http://oa.hymost.com:8888
 帐号：h1745  密码：123456
  
 涉及到ivim:
-1 git clone http://github.com/liyatanggithub/liyatangvim.git
+1 git clone https://github.com/liyatanggithub/liyatangvim.git
+git clone https://xuhaohunter@bitbucket.org/xuhaohunter/docs.git//私有项目别人拉代码需要密码，私有项目别人无法看到
   cp .vimrc ~
   cp -r .vim ~
 2 sudo apt-get install ctags cscope
@@ -111,6 +114,10 @@ http://oa.hymost.com:8888
   VS VP
 5 复制粘贴
   中键
+
+如何获取对应提交对应的patch:
+1 git revert commitId
+2 将+改为-，将-改为+
  
 AndroidBoard.mk
 KERNEL_DEFCONFIG := msm8916_titan-perf_defconfig
@@ -134,7 +141,7 @@ insert模式下 alt + hjkl来上下左右使用
 2 QXDM文档见附件，抓log前请先导入配置文件
  
 查找并替换
-find . -name "*.jsp" -print | xargs grep "alert"
+find . -name "*.h" -print | xargs grep "alert"
  
 sed -i "s/pr_info/pr_err/g" `grep pr_info -rl ./`
 sed -i "s/pr_debug/pr_err/g" `grep pr_debug -rl ./`
@@ -195,6 +202,8 @@ virtual全屏需要安装Devices->GuestAdditions
 dump问题需要elf文件见modem_release，vmlinux见刷机软件。
 \\192.168.10.233\modem_release
 titan对应的modem:X26_titan
+
+串口线及minicom使用
  
 unstripped ko路径：
 mm vendor\qcom\opensource\wlan\prima或者make pronto_wlan.ko -j6
@@ -295,6 +304,8 @@ qxdm log中没有有效信息，正确的log打开后可以看到wlan等关键�
 QXDM --> nv browser --> 04678    WLAN MAC Address    wlan_mac_address    WLAN
 按下空格，只能设置数字 （QMI 接口不支持）
  
+00开头的MAC地址是可以连上AP的。
+ 
 将手机固定在AP较多的信道，不过滤mac地址，抓取sniffer log
   a 安装Omnipeek软件，网上搜索
   b 购买Omnipeek软件支持的网卡，推荐思科AE3000，并安装Omnipeek官网上的驱动
@@ -332,6 +343,9 @@ gActiveMinChannelTime=40
 1 setenforce 0
 2 bt_stack.conf中的BtSnoopFileName=/data/btsnoop_hci.cfa
 确认可以生成btsnoop_hci.cfa文件
+
+解决不能安装位置来源的APK:
+Settings->Security->未知来源
  
 external/bluetooth/bluedroid/bta/ag/bta_ag_cmd.c
 HFP AT cmd
@@ -638,5 +652,28 @@ endif
 <6>[   51.553698] cfg80211:   (57240000 KHz - 59400000 KHz @ 2160000 KHz), (N/A, 2800 mBm)
 <6>[   51.553703] cfg80211:   (59400000 KHz - 63720000 KHz @ 2160000 KHz), (N/A, 4400 mBm)
 <6>[   51.553709] cfg80211:   (63720000 KHz - 65880000 KHz @ 2160000 KHz), (N/A, 2800 mBm)
+
+
+Dear MTK,
+  我们正在开发此功能，目前已经确定了kernel中的CMD24/CMD25为SD卡写命令，通过mmc_hostname(host)可以确定是写入mmc1还是mmc0，
+  目前在获取SD卡写入数据，回读SD卡写入数据方面遇到困难，MTK对代码比较熟悉，请支持。
+  我的联系方式：18521362336。
+  
+
+if ( req != NULL && bio != NULL )
+            pr_info("enter blk-core.c bio_attempt_back_merge req->__data_len += %d, req->__data_len = %d \n", bio->bi_size, req->__data_len);
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

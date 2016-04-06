@@ -1,0 +1,212 @@
+From ec3b358c1fa5e048cafcc069f0cef0b493315ddf Mon Sep 17 00:00:00 2001
+From: xuhao <xuhao@hymost.com>
+Date: Wed, 6 Apr 2016 15:37:43 +0800
+Subject: [PATCH] add_mmc_bad_sdcard_detect
+
+Change-Id: I2f28df9536a46f660134998bc9122297dd577c65
+
+diff --git a/drivers/mmc/card/block.c b/drivers/mmc/card/block.c
+index 428115e..bae836b 100644
+--- a/drivers/mmc/card/block.c
++++ b/drivers/mmc/card/block.c
+@@ -1543,6 +1543,17 @@ static int mmc_blk_err_check(struct mmc_card *card,
+ #endif
+ 		if (brq->sbc.error || brq->cmd.error || brq->stop.error ||
+ 		    brq->data.error) {
++                        /*if (card == NULL)
++                            pr_info("in block.c card == NULL");
++                        else {
++                            card->rw_err_count++;
++                            if (card->rw_err_count >= 10) {
++                                //怎么让uevent带参数
++                                kobject_uevent_env(&card->dev.kobj, KOBJ_CHANGE, NULL);
++                                card->rw_err_count = 0;
++                                pr_info("read write error times reach 10 times, send uevent and reset count \n");
++                            }
++                        }*/
+ 			switch (mmc_blk_cmd_recovery(card, req, brq, &ecc_err, &gen_err)) {
+ 			case ERR_RETRY:
+ 				return MMC_BLK_RETRY;
+@@ -2469,6 +2480,8 @@ static int mmc_blk_issue_rw_rq(struct mmc_queue *mq, struct request *rqc)
+ 	if (mmcqd_tag_t1[idx] == 0)
+ 		mmcqd_tag_t1[idx] = time1;
+ 	t_period = time1 - mmcqd_tag_t1[idx];
++      
++        //pr_info("enter block.c mmc_blk_issue_rw_rq t_period = %lld \n", t_period);
+ 
+ 	if (t_period >= (unsigned long long)PRT_TIME_PERIOD) {
+ 		mmcqd_read_clear[idx] = 2;
+@@ -2486,6 +2499,8 @@ static int mmc_blk_issue_rw_rq(struct mmc_queue *mq, struct request *rqc)
+ 			do_div(t_period, 100);	/*boundary issue*/
+ 			t_percent = ((unsigned int)t_usage)/((unsigned int)t_period);
+ 			mmcqd_work_percent[idx] = t_percent;
++                        //PRT_TIME_PERIOD是1秒还是1毫秒，需不需要建个数组来取平均？
++                        pr_info("t_percent = %d, t_usage = %lld, t_period = %lld, mmcqd_rq_count[%d] = %d \n", t_percent, t_usage, t_period, idx, mmcqd_rq_count[idx]);
+ 					snprintf(block_io_log_source_buffer, WORKLOAD_LOG_LENGTH,
+ 						"wl:%d%%,%lld,%lld,%d.", t_percent, t_usage,
+ 						t_period, mmcqd_rq_count[idx]);
+@@ -2515,6 +2530,18 @@ static int mmc_blk_issue_rw_rq(struct mmc_queue *mq, struct request *rqc)
+ 				/* discard print if duration will <1ms*/
+ 				perf_meter = (mmcqd_rq_size_wr[idx])/((unsigned int)mmcqd_t_usage_wr[idx]); /*kb/s*/
+ 				mmcqd_w_throughput[idx] = perf_meter;
++                                pr_info("perf_meter = %d, mmcqd_rq_size_wr[%d] = %d, mmcqd_t_usage_wr[%d] = %d \n", perf_meter, idx, mmcqd_rq_size_wr[idx], idx, mmcqd_t_usage_wr[idx]);
++                                //如何保证10秒平均负载，如何获取10秒平均读取速度
++                                if (mmcqd_work_percent[0] > 5 && mmcqd_w_throughput[0] < 1000) {
++                                        char *pEnvp[2];           
++                                        pEnvp[0] = "MMC_ERR_TYPE=1";  
++                                        pEnvp[1] = NULL;            
++                                        int ret = 0;
++                                         
++                                        ret = kobject_uevent_env(&card->dev.kobj, KOBJ_CHANGE, pEnvp);
++                                        pr_info("kobject_uevent_env(&card->dev.kobj, KOBJ_CHANGE, pEnvp), ret = %d \n", ret);
++                                        pr_info("when work load reach 95%, write throughput is less than 1 Mbps, mmcqd_w_throughput[%d] = %d \n", idx, mmcqd_w_throughput[idx]);
++                                }
+ 						snprintf(block_io_log_source_buffer, WRITE_THROUGHPUT_LOG_LENGTH,
+ 							"wt:%d,%d,%lld.", perf_meter,
+ 							mmcqd_rq_size_wr[idx], mmcqd_t_usage_wr[idx]);
+diff --git a/drivers/mmc/core/bus.c b/drivers/mmc/core/bus.c
+index 98f4978..27954f4 100644
+--- a/drivers/mmc/core/bus.c
++++ b/drivers/mmc/core/bus.c
+@@ -96,7 +96,8 @@ mmc_bus_uevent(struct device *dev, struct kobj_uevent_env *env)
+ 	retval = add_uevent_var(env, "MMC_NAME=%s", mmc_card_name(card));
+ 	if (retval)
+ 		return retval;
+-
++        pr_info("enter mmc_bus_uevent \n");
++        dump_stack();
+ 	/*
+ 	 * Request the mmc_block device.  Note: that this is a direct request
+ 	 * for the module it carries no information as to what is inserted.
+diff --git a/drivers/mmc/core/core.c b/drivers/mmc/core/core.c
+index c92353c..ea632a8 100644
+--- a/drivers/mmc/core/core.c
++++ b/drivers/mmc/core/core.c
+@@ -806,6 +806,8 @@ static int mmc_start_request(struct mmc_host *host, struct mmc_request *mrq)
+ 	unsigned int i, sz;
+ 	struct scatterlist *sg;
+ #endif
++        int ret = 0;
++
+ 	mmc_retune_hold(host);
+ 
+ 	if (mmc_card_removed(host->card))
+@@ -817,10 +819,25 @@ static int mmc_start_request(struct mmc_host *host, struct mmc_request *mrq)
+ 			 mrq->sbc->arg, mrq->sbc->flags);
+ 	}
+ 
+-	pr_debug("%s: starting CMD%u arg %08x flags %08x\n",
++        pr_debug("%s: starting CMD%u arg %08x flags %08x\n",
+ 		 mmc_hostname(host), mrq->cmd->opcode,
+ 		 mrq->cmd->arg, mrq->cmd->flags);
+ 
++        if (!strcmp(mmc_hostname(host), "mmc0") && 
++            (mrq->cmd->opcode == 25 || mrq->cmd->opcode == 24) && 
++            !host->card->first_write ) {
++            //kernel中如何写节点
++            //如何写uevent，event如何带参数？
++            char *pEnvp[2];           
++            pEnvp[0] = "MMC_ERR_TYPE=1";  
++            pEnvp[1] = NULL;            
++            ret = kobject_uevent_env(&host->card->dev.kobj, KOBJ_CHANGE, pEnvp);
++            pr_info("kobject_uevent_env(KOBJ_CHANGE), ret = %d \n", ret);
++            //add_uevent_var(env, "MMC_ERR_TYPE=%s", "333");
++            pr_info("first time sd card write operation, send event to vold,  mmc_hostname(host) = %s, mrq->cmd->opcode = %d, host->card->first_write = %d \n", mmc_hostname(host), mrq->cmd->opcode, host->card->first_write);
++            host->card->first_write = false;
++        }
++
+ 	if (mrq->data) {
+ 		pr_debug("%s:     blksz %d blocks %d flags %08x "
+ 			"tsac %d ms nsac %d\n",
+@@ -3412,8 +3429,8 @@ static int mmc_rescan_try_freq(struct mmc_host *host, unsigned freq)
+ 	sdio_reset(host);
+ 	mmc_go_idle(host);
+ 
+-	mmc_send_if_cond(host, host->ocr_avail);
+-
++	mmc_send_if_cond(host, host->ocr_avail); 
++      
+ 	/* Order's important: probe SDIO, then SD, then MMC */
+ 	if (!mmc_attach_sdio(host))
+ 		return 0;
+diff --git a/include/linux/mmc/card.h b/include/linux/mmc/card.h
+index 75ffd20..9bf1182 100644
+--- a/include/linux/mmc/card.h
++++ b/include/linux/mmc/card.h
+@@ -353,6 +353,8 @@ struct mmc_card {
+  	unsigned int		pref_erase;	/* in sectors */
+  	u8			erased_byte;	/* value of erased bytes */
+ 	unsigned int		wp_grp_size;	/* write group size in sectors */
++       bool                    first_write;
++       unsigned int            rw_err_count;
+ 
+ 	u32			raw_cid[4];	/* raw card CID */
+ 	u32			raw_csd[4];	/* raw card CSD */
+diff --git a/lib/kobject_uevent.c b/lib/kobject_uevent.c
+index 9ebf9e2..67b3d70 100644
+--- a/lib/kobject_uevent.c
++++ b/lib/kobject_uevent.c
+@@ -178,8 +178,17 @@ int kobject_uevent_env(struct kobject *kobj, enum kobject_action action,
+ 	struct uevent_sock *ue_sk;
+ #endif
+ 
+-	pr_debug("kobject: '%s' (%p): %s\n",
+-		 kobject_name(kobj), kobj, __func__);
++	pr_info("kobject: '%s' (%p): %s, action = %d \n",
++		 kobject_name(kobj), kobj, __func__, action);
++
++        if (envp_ext == NULL) {
++            pr_info("envp_ext == NULL \n");
++        }
++        else if (envp_ext != NULL) {
++            for (i = 0; envp_ext[i]; i++) {
++                pr_info("envp_ext[i] = %s \n", envp_ext[i]);
++            }
++        }
+ 
+ 	/* search the kset we belong to */
+ 	top_kobj = kobj;
+@@ -213,10 +222,14 @@ int kobject_uevent_env(struct kobject *kobj, enum kobject_action action,
+ 		}
+ 
+ 	/* originating subsystem */
+-	if (uevent_ops && uevent_ops->name)
++	if (uevent_ops && uevent_ops->name) {
+ 		subsystem = uevent_ops->name(kset, kobj);
+-	else
++                pr_info("subsystem = %s 0001 \n", subsystem);
++        }
++	else {
+ 		subsystem = kobject_name(&kset->kobj);
++                pr_info("subsystem = %s 0002 \n", subsystem);
++        }
+ 	if (!subsystem) {
+ 		pr_debug("kobject: '%s' (%p): %s: unset subsystem caused the "
+ 			 "event to drop!\n", kobject_name(kobj), kobj,
+@@ -244,6 +257,7 @@ int kobject_uevent_env(struct kobject *kobj, enum kobject_action action,
+ 	if (retval)
+ 		goto exit;
+ 	retval = add_uevent_var(env, "SUBSYSTEM=%s", subsystem);
++        pr_info("subsystem = %s 0003 \n", subsystem);
+ 	if (retval)
+ 		goto exit;
+ 
+@@ -251,6 +265,7 @@ int kobject_uevent_env(struct kobject *kobj, enum kobject_action action,
+ 	if (envp_ext) {
+ 		for (i = 0; envp_ext[i]; i++) {
+ 			retval = add_uevent_var(env, "%s", envp_ext[i]);
++                        pr_info("envp_ext[i] = %s \n", envp_ext[i]);
+ 			if (retval)
+ 				goto exit;
+ 		}
+@@ -340,6 +355,7 @@ int kobject_uevent_env(struct kobject *kobj, enum kobject_action action,
+ 		if (retval)
+ 			goto exit;
+ 		retval = init_uevent_argv(env, subsystem);
++                pr_info("subsystem = %s 0004 \n", subsystem);
+ 		if (retval)
+ 			goto exit;
+ 
+-- 
+1.7.9.5
+
